@@ -1,7 +1,7 @@
-import { getPageData } from '../util';
+import { fetchData } from '@util/fetch';
 
 export default async function BoardList() {
-  const data = await getPageData();
+  const data = await fetchData();
 
   return data.message;
 }

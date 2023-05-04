@@ -1,7 +1,7 @@
-import { getData } from '../util';
+import { getPageData } from '../util';
 
-export default async function BoardList(props: any) {
-  const data = await getData(__dirname.split('app')[1], props);
+export default async function BoardList() {
+  const data = await getPageData();
 
   return data.message;
 }

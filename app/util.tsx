@@ -1,16 +1,14 @@
-export async function getData(path: string, props: any) {
-  // const path = __dirname.split('app')[1];
-  const { params, searchParams } = props;
-  const serverUrl = 'http://localhost:3002/api';
+import { headers } from "next/headers";
+
+export async function getPageData() {
+  const headersList = headers()
+  const path = headersList.get('x-invoke-path')
+  const query = decodeURI(headersList.get('x-invoke-query')!)
+  const serverUrl = 'http://localhost:3001/api';
 
   let fetchUrl = serverUrl + path;
 
-  Object.entries(params).forEach((entry) => {
-    const [key, value] = entry;
-    fetchUrl = fetchUrl.replace(`[${key}]`, value as string);
-  });
-
-  Object.entries(searchParams).forEach((entry, index, array) => {
+  Object.entries(query).forEach((entry, index, array) => {
     if (index === 0) fetchUrl = fetchUrl + '?';
     const [key, value] = entry;
     if (Array.isArray(value)) {

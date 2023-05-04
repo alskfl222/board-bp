@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import prisma from '@/util/db';
+import prisma from '@util/db';
 
 export async function POST(request: NextRequest) {
   const reqData = await request.formData();

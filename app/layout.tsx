@@ -1,8 +1,8 @@
 import './globals.css';
 import { headers } from 'next/headers';
-import { Noto_Sans_KR } from 'next/font/google';
+// import { Noto_Sans_KR } from 'next/font/google';
 
-const notoSans = Noto_Sans_KR({ weight: '400', subsets: ['latin'] });
+// const notoSans = Noto_Sans_KR({ weight: '400', subsets: ['latin'] });
 
 export const metadata = {
   title: 'alskfl222 board-bp',
@@ -19,7 +19,8 @@ export default function RootLayout({
 
   return (
     <html lang='ko'>
-      <body className={notoSans.className}>
+      {/* <body className={notoSans.className}> */}
+      <body>
         {path !== '/' && <div>header</div>}
         {children}
       </body>

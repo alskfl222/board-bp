@@ -22,5 +22,6 @@ export async function validateToken(): Promise<any> {
   const user: Partial<User> | null = await prisma.user.findUnique({
     where: { email: verify.email },
   });
-  return { user };
+  return user;
 }
+

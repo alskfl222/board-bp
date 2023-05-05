@@ -5,38 +5,13 @@ import { User } from '@prisma/client';
 import { validateToken } from '@/util/auth';
 
 export async function GET() {
-  const validate = await validateToken();
+  const user = await validateToken();
 
-  if (validate.error)
-    return NextResponse.json({ error: validate.error }, { status: 400 });
-  if (!validate.user)
-    return NextResponse.json({ error: 'Not Found User' }, { status: 404 });
+  if (user)
+    return NextResponse.json({ error: 'Not Found User' }, { status: 400 });
 
-  delete validate.user.password;
-  return NextResponse.json(validate.user);
-}
-
-export async function POST(request: NextRequest) {
-  const reqData = await request.formData();
-  const email = reqData.get('email') as string | null;
-  const name = reqData.get('name') as string | null;
-  const password = reqData.get('password') as string | null;
-
-  if (!email || !name || !password)
-    return NextResponse.json({ error: 'Invaild Info' }, { status: 400 });
-
-  const salt = process.env.SALT as string;
-  const hashedPassword = await bcrypt.hash(password, parseInt(salt));
-
-  try {
-    const res: Partial<User> = await prisma.user.create({
-      data: { email, name, password: hashedPassword },
-    });
-    delete res.password;
-    return NextResponse.json({ data: res });
-  } catch (e) {
-    return NextResponse.json({ error: e }, { status: 400 });
-  }
+  delete user.password;
+  return NextResponse.json(user);
 }
 
 export async function PUT(request: NextRequest) {

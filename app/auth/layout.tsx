@@ -4,7 +4,11 @@ export default function BoardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className='flex min-h-screen flex-col items-center justify-between p-24'>
+    <section
+      className='min-h-screen p-24 flex flex-col items-center
+                 border border-white'
+    >
+      <div className='border border-white'>AUTH!</div>
       {children}
     </section>
   );

@@ -5,11 +5,11 @@ import { User } from '@prisma/client';
 
 export async function validateToken(): Promise<any> {
   const cookieStore = cookies();
-  const authorization = cookieStore.get('Authorization');
-  if (!authorization) {
+  const auth = cookieStore.get('auth');
+  if (!auth) {
     return { error: 'No Token' };
   }
-  const token = authorization.value;
+  const token = auth.value;
   const secret = process.env.JWT_SECRET || 'asdf';
 
   let verify: any;

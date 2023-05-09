@@ -14,6 +14,9 @@ export async function fetchInter(option?: RequestInit) {
 
   const res = await fetch(fetchUrl, {
     cache: 'no-store',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
     ...option,
   });
   if (!res.ok) {

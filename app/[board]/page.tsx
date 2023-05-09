@@ -1,4 +1,4 @@
-import { fetchInter } from '@util/fetch';
+import { fetchInter } from '@util/fetchInter';
 
 export default async function BoardList() {
   const data = await fetchInter();

@@ -15,12 +15,12 @@ export function createFormData(data: Record<string, any>) {
 }
 
 export const handleSubmit =
-  (pathname: string, data: Record<string, any>) =>
+  (pathname: string, data: Record<string, any>, redirect?: string) =>
   async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = createFormData(data);
     const fetchUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}${pathname}`;
-    const { data: result } = await axios({
+    const response = await axios({
       url: fetchUrl,
       method: 'post',
       data: formData,
@@ -28,5 +28,8 @@ export const handleSubmit =
         'Content-Type': 'multipart/form-data',
       },
     });
-    return result;
+    if (response.status >= 400) {
+      return;
+    }
+    if (redirect) window.location.href = redirect;
   };

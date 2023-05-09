@@ -1,10 +1,9 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { handleSubmit } from '@util/fetch';
-
 
 export default function SignUp() {
   const pathname = usePathname();
@@ -14,10 +13,10 @@ export default function SignUp() {
   const [thumbnail, setThumbnail] = useState<File | null>(null);
 
   return (
-    <div>
+    <>
       <form
         className='flex flex-col gap-4'
-        onSubmit={handleSubmit(pathname, { email, password, name })}
+        onSubmit={handleSubmit(pathname, { email, password, name }, '/')}
       >
         <p>EMAIL: {email}</p>
         <input
@@ -55,6 +54,6 @@ export default function SignUp() {
         )}
         <button type='submit'>가입</button>
       </form>
-    </div>
+    </>
   );
 }

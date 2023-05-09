@@ -1,8 +1,8 @@
 import './globals.css';
-import { headers } from 'next/headers';
-// import { Noto_Sans_KR } from 'next/font/google';
+import { Noto_Sans_KR } from 'next/font/google';
+import Header from '@/components/Header';
 
-// const notoSans = Noto_Sans_KR({ weight: '400', subsets: ['latin'] });
+const notoSans = Noto_Sans_KR({ weight: '400', subsets: ['latin'] });
 
 export const metadata = {
   title: 'alskfl222 board-bp',
@@ -14,15 +14,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = headers();
-  const path = headersList.get('x-invoke-path');
-
   return (
     <html lang='ko'>
-      {/* <body className={notoSans.className}> */}
-      <body>
-        {path !== '/' && <div>header</div>}
-        {children}
+      <body
+        className={`${notoSans.className} w-screen min-h-screen flex flex-col items-center`}
+      >
+        <Header />
+        <div className='w-full max-w-[960px] mt-12 flex'>{children}</div>
       </body>
     </html>
   );

@@ -1,14 +1,13 @@
-export default function BoardLayout({
+export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <section
-      className='min-h-screen p-24 flex flex-col items-center
-                 border border-white'
-    >
-      <div className='border border-white'>AUTH!</div>
+    <section className='w-full flex flex-col border items-center border-fuchsia-300'>
+      <div className='w-full h-24 flex justify-center items-center border border-fuchsia-500'>
+        <h1>AUTH!</h1>
+      </div>
       {children}
     </section>
   );

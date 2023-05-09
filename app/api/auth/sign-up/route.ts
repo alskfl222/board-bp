@@ -8,7 +8,6 @@ export async function POST(request: NextRequest) {
   const email = reqData.get('email') as string | null;
   const name = reqData.get('name') as string | null;
   const password = reqData.get('password') as string | null;
-  console.log(email, name, password);
 
   if (!email || !name || !password)
     return NextResponse.json({ error: 'Invaild Info' }, { status: 400 });

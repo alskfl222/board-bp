@@ -14,7 +14,7 @@ export function createFormData(data: Record<string, any>) {
   return formData;
 }
 
-export const handleSubmit =
+export const submitForm =
   (pathname: string, data: Record<string, any>, redirect?: string) =>
   async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

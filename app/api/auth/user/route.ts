@@ -6,10 +6,8 @@ import { validateToken } from '@util/auth';
 
 export async function GET() {
   const user = await validateToken();
-
-  if (user)
-    return NextResponse.json({ error: 'Not Found User' }, { status: 400 });
-
+  if (user.error)
+    return NextResponse.json({ error: user.error }, { status: 400 });
   delete user.password;
   return NextResponse.json(user);
 }

@@ -14,13 +14,22 @@ export default function Menu() {
       path: 'auth/sign-in',
       name: '로그인',
     },
+    user: {
+      path: 'auth/user',
+      name: '회원 정보',
+    },
   };
   return (
-    <div className='relative w-full flex flex-col' onClick={() => setIsOpen(!isOpen)}>
-      <div className='self-end px-4'>Menu</div>
+    <div
+      className="relative w-full flex flex-col"
+      onClick={() => setIsOpen(!isOpen)}
+    >
+      <div className="self-end px-4">Menu</div>
       {isOpen && (
-        <div className='absolute top-full w-full p-4 flex flex-col
-                        items-end gap-2 bg-slate-900'>
+        <div
+          className="absolute top-full w-full p-4 flex flex-col
+                        items-end gap-2 bg-slate-900"
+        >
           {Object.keys(menus).map((menu) => {
             return (
               <Link href={{ pathname: menus[menu].path }} key={menu}>

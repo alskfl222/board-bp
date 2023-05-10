@@ -12,23 +12,27 @@ export default function SignUp() {
   return (
     <>
       <form
-        className="flex flex-col gap-4"
-        onSubmit={submitForm(pathname, { email, password }, '/auth/user')}
+        className='flex flex-col gap-4'
+        onSubmit={submitForm(
+          pathname,
+          { email, password },
+          { redirect: '/auth/user' }
+        )}
       >
         <p>EMAIL: {email}</p>
         <input
-          className="text-black"
+          className='text-black'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <p>PASSWORD: {password.length}</p>
         <input
-          type="password"
-          className="text-black"
+          type='password'
+          className='text-black'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">로그인</button>
+        <button type='submit'>로그인</button>
       </form>
     </>
   );

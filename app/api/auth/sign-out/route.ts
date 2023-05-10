@@ -6,7 +6,7 @@ export async function DELETE() {
     {
       status: 200,
       headers: {
-        'Set-Cookie': 'Authorization=; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+        'Set-Cookie': 'auth=; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
       },
     }
   );

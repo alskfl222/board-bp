@@ -24,15 +24,14 @@ export async function POST(request: NextRequest) {
     const token = jwt.sign({ name: user.name, email: user.email }, secret, {
       expiresIn: 60 * 60,
     });
-    return NextResponse.json(
-      { message: 'OK' },
-      {
-        status: 200,
-        headers: {
-          'Set-Cookie': `auth=${token}; path=/; samesite=lax; httponly`,
-        },
-      }
-    );
+    const response = NextResponse.json({ message: 'OK' });
+    response.cookies.set('auth', token, {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'lax',
+      expires: new Date().getTime() + 60 * 60 * 1000,
+    });
+    return response;
   }
   return NextResponse.json({ message: 'Invalid password' }, { status: 400 });
 }

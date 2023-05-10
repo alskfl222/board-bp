@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { submitForm } from '@util/fetch';
+import { submitLogin } from '@util/fetch';
 
 export default function SignUp() {
-  const pathname = usePathname();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -13,11 +11,7 @@ export default function SignUp() {
     <>
       <form
         className='flex flex-col gap-4'
-        onSubmit={submitForm(
-          pathname,
-          { email, password },
-          { redirect: '/auth/user' }
-        )}
+        onSubmit={submitLogin({ email, password })}
       >
         <p>EMAIL: {email}</p>
         <input

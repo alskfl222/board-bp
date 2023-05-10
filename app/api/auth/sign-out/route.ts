@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
 
 export async function DELETE() {
-  return NextResponse.json(
-    { message: 'OK' },
-    {
-      status: 200,
-      headers: {
-        'Set-Cookie': 'auth=; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-      },
-    }
-  );
+  const response = NextResponse.json({ message: 'OK' });
+  response.cookies.set('auth', '', {
+    expires: new Date(0),
+  });
+  return response;
 }

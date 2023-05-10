@@ -1,5 +1,6 @@
-import { FormEvent } from 'react';
+import { FormEvent, Dispatch, SetStateAction } from 'react';
 import axios from 'axios';
+import { state } from './state';
 
 export function createFormData(data: Record<string, any>) {
   const formData = new FormData();
@@ -14,11 +15,24 @@ export function createFormData(data: Record<string, any>) {
   return formData;
 }
 
+export async function fetchData(
+  pathname: string,
+  setData: Dispatch<SetStateAction<Record<string, any>>>
+) {
+  const fetchUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}${pathname}`;
+  try {
+    const response = await axios.get(fetchUrl);
+    setData(response.data);
+  } catch {
+    window.location.href = '/auth/sign-in';
+  }
+}
+
 export const submitForm =
   (
     pathname: string,
     data: Record<string, any>,
-    options?: { redirect?: string; method?: string }
+    options?: { redirect?: string; method?: string; setState?: () => any }
   ) =>
   async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,5 +49,12 @@ export const submitForm =
     if (response.status >= 400) {
       return;
     }
+    if (options?.setState) options.setState();
     if (options?.redirect) window.location.href = options?.redirect;
   };
+
+export const submitLogin = (data: Record<string, any>) =>
+  submitForm('/auth/sign-in', data, {
+    redirect: 'user',
+    setState: () => (state.isLogin = true),
+  });

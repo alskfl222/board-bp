@@ -15,31 +15,35 @@ export default function SignUp() {
   return (
     <>
       <form
-        className="flex flex-col gap-4"
-        onSubmit={submitForm(pathname, { email, password, name }, '/')}
+        className='flex flex-col gap-4'
+        onSubmit={submitForm(
+          pathname,
+          { email, password, name },
+          { redirect: '/' }
+        )}
       >
         <p>EMAIL: {email}</p>
         <input
-          className="text-black"
+          className='text-black'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <p>PASSWORD: {password.length}</p>
         <input
-          type="password"
-          className="text-black"
+          type='password'
+          className='text-black'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <p>NAME: {name}</p>
         <input
-          className="text-black"
+          className='text-black'
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <p>THUMBNAIL: {thumbnail ? '있음' : '없음'}</p>
         <input
-          type="file"
+          type='file'
           onChange={(e) =>
             setThumbnail(e.target.files ? e.target.files[0] : null)
           }
@@ -47,12 +51,12 @@ export default function SignUp() {
         {thumbnail && (
           <Image
             src={URL.createObjectURL(thumbnail)}
-            alt="thumbnail preview"
+            alt='thumbnail preview'
             width={240}
             height={240}
           />
         )}
-        <button type="submit">가입</button>
+        <button type='submit'>가입</button>
       </form>
     </>
   );

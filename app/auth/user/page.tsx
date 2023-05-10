@@ -3,11 +3,14 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
-import { submitForm } from '@util/fetch';
+import { fetchData, submitForm } from '@util/fetch';
 
 export default function UserInfo() {
   const pathname = usePathname();
-  const [data, setData] = useState<Record<string, any>>({});
+  const [data, setData] = useState<Record<string, any>>({
+    name: '',
+    email: '',
+  });
   const [pw, setPw] = useState('');
   const [newPw, setNewPw] = useState('');
   const [newPwConfirm, setNewPwConfirm] = useState('');
@@ -22,12 +25,7 @@ export default function UserInfo() {
   };
 
   useEffect(() => {
-    async function fetchData() {
-      const fetchUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}${pathname}`;
-      const response = await axios.get(fetchUrl);
-      setData(response.data);
-    }
-    fetchData();
+    fetchData(pathname, setData);
   }, [pathname]);
 
   return (

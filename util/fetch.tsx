@@ -32,7 +32,12 @@ export const submitForm =
   (
     pathname: string,
     data: Record<string, any>,
-    options?: { redirect?: string; method?: string; setState?: () => any }
+    options?: {
+      redirect?: string;
+      method?: string;
+      setState?: (...args: any[]) => any;
+      callback?: (...args: any[]) => any;
+    }
   ) =>
   async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,6 +55,7 @@ export const submitForm =
       return;
     }
     if (options?.setState) options.setState();
+    if (options?.callback) options.callback();
     if (options?.redirect) window.location.href = options?.redirect;
   };
 
@@ -58,3 +64,14 @@ export const submitLogin = (data: Record<string, any>) =>
     redirect: 'user',
     setState: () => (state.isLogin = true),
   });
+
+export const submitUpdate = (
+  data: Record<string, any>,
+  setIsLoading: Dispatch<SetStateAction<any>>
+) => {
+  return submitForm('/auth/user', data, {
+    method: 'put',
+    redirect: '/auth',
+    callback: () => setIsLoading(false),
+  });
+};

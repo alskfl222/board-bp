@@ -2,11 +2,11 @@
 
 import { useState, useEffect, FormEvent } from 'react';
 import { usePathname } from 'next/navigation';
-import axios from 'axios';
-import { fetchData, submitForm } from '@util/fetch';
+import { fetchData, submitForm, submitUpdate } from '@util/fetch';
 
 export default function UserInfo() {
   const pathname = usePathname();
+  const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<Record<string, any>>({
     name: '',
     email: '',
@@ -17,17 +17,18 @@ export default function UserInfo() {
 
   const handleUpdate = (e: FormEvent<HTMLFormElement>) => {
     if (newPw !== newPwConfirm) return alert('Check new password');
-    return submitForm(
-      pathname,
+    return submitUpdate(
       { ...data, password: pw, newPassword: newPw },
-      { method: 'put', redirect: '/auth' }
+      setIsLoading
     )(e);
   };
 
   useEffect(() => {
     fetchData(pathname, setData);
+    setIsLoading(false);
   }, [pathname]);
 
+  if (isLoading) return <div>is LOADING...</div>;
   return (
     <form className='flex flex-col gap-4' onSubmit={handleUpdate}>
       <p>NAME: </p>

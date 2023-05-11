@@ -1,27 +1,40 @@
 'use client';
 
-import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { FormEvent, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { submitForm } from '@util/fetch';
+import axios from 'axios';
+import { getFetchUrl, createFormData } from '@util/fetch';
 
 export default function SignUp() {
+  const router = useRouter();
   const pathname = usePathname();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] = useState<FileList | null>(null);
+
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fetchUrl = getFetchUrl(pathname);
+    const formData = createFormData({ email, password, name });
+
+    try {
+      await axios.post(fetchUrl, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      router.push('auth/sign-in');
+    } catch (err) {
+      console.error(err);
+    } finally {
+    }
+  }
 
   return (
     <>
-      <form
-        className='flex flex-col gap-4'
-        onSubmit={submitForm(
-          pathname,
-          { email, password, name },
-          { redirect: '/' }
-        )}
-      >
+      <form className='flex flex-col gap-4' onSubmit={onSubmit}>
         <p>EMAIL: {email}</p>
         <input
           className='text-black'
@@ -44,13 +57,12 @@ export default function SignUp() {
         <p>THUMBNAIL: {thumbnail ? '있음' : '없음'}</p>
         <input
           type='file'
-          onChange={(e) =>
-            setThumbnail(e.target.files ? e.target.files[0] : null)
-          }
+          multiple
+          onChange={(e) => setThumbnail(e.target.files || null)}
         />
         {thumbnail && (
           <Image
-            src={URL.createObjectURL(thumbnail)}
+            src={URL.createObjectURL(thumbnail[0])}
             alt='thumbnail preview'
             width={240}
             height={240}

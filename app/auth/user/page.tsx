@@ -1,84 +1,96 @@
 'use client';
 
 import { useState, useEffect, FormEvent } from 'react';
-import { usePathname } from 'next/navigation';
-import { fetchData, submitForm, submitUpdate } from '@util/fetch';
+import { useRouter, usePathname } from 'next/navigation';
+import { getFetchUrl } from '@util/fetch';
+import axios from 'axios';
 
 export default function UserInfo() {
+  const router = useRouter();
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<Record<string, any>>({
-    name: '',
-    email: '',
-  });
-  const [pw, setPw] = useState('');
-  const [newPw, setNewPw] = useState('');
-  const [newPwConfirm, setNewPwConfirm] = useState('');
+  const [id, setId] = useState(0);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
 
   const handleUpdate = (e: FormEvent<HTMLFormElement>) => {
-    if (newPw !== newPwConfirm) return alert('Check new password');
-    return submitUpdate(
-      { ...data, password: pw, newPassword: newPw },
-      setIsLoading
-    )(e);
+    if (newPassword !== newPasswordConfirm) return alert('Check new password');
   };
 
   useEffect(() => {
-    fetchData(pathname, setData);
-    setIsLoading(false);
-  }, [pathname]);
+    async function initUser() {
+      const fetchUrl = getFetchUrl(pathname);
+      try {
+        const response = await axios.get(fetchUrl);
+        const { id, name, email } = response.data;
+        setId(id);
+        setName(name);
+        setEmail(email);
+      } catch (e) {
+        alert('Invalid Token');
+        router.push('auth/sign-in');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    initUser();
+  }, [router, pathname]);
 
-  if (isLoading) return <div>is LOADING...</div>;
   return (
-    <form className='flex flex-col gap-4' onSubmit={handleUpdate}>
-      <p>NAME: </p>
-      <input
-        value={data.name}
-        onChange={(e) => {
-          setData((prev) => {
-            return { ...prev, name: e.target.value };
-          });
-        }}
-        className='text-black'
-      />{' '}
-      <p>EMAIL: </p>
-      <input
-        value={data.email}
-        onChange={(e) => {
-          setData((prev) => {
-            return { ...prev, email: e.target.value };
-          });
-        }}
-        className='text-black'
-      />
-      <p>CURRENT PASSWORD: </p>
-      <input
-        value={pw}
-        type='password'
-        onChange={(e) => {
-          setPw(e.target.value);
-        }}
-        className='text-black'
-      />
-      <p>NEW PASSWORD: </p>
-      <input
-        value={newPw}
-        type='password'
-        onChange={(e) => {
-          setNewPw(e.target.value);
-        }}
-        className='text-black'
-      />
-      <p>NEW PASSWORD CONFIRM: </p>
-      <input
-        value={newPwConfirm}
-        type='password'
-        onChange={(e) => {
-          setNewPwConfirm(e.target.value);
-        }}
-        className='text-black'
-      />
-      <button type='submit'>수정</button>
-    </form>
+    <>
+      {isLoading && (
+        <div
+          className='absolute w-full h-full flex justify-center items-center
+                     bg-neutral-100/90 text-black'
+        >
+          <div>LOADING...</div>
+        </div>
+      )}
+      <form className='flex flex-col gap-4' onSubmit={handleUpdate}>
+        <p>NAME: </p>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className='text-black'
+        />{' '}
+        <p>EMAIL: </p>
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className='text-black'
+        />
+        <p>CURRENT PASSWORD: </p>
+        <input
+          value={password}
+          type='password'
+          onChange={(e) => {
+            setPassword(e.target.value);
+          }}
+          className='text-black'
+        />
+        <p>NEW PASSWORD: </p>
+        <input
+          value={newPassword}
+          type='password'
+          onChange={(e) => {
+            setNewPassword(e.target.value);
+          }}
+          className='text-black'
+        />
+        <p>NEW PASSWORD CONFIRM: </p>
+        <input
+          value={newPasswordConfirm}
+          type='password'
+          onChange={(e) => {
+            setNewPasswordConfirm(e.target.value);
+          }}
+          className='text-black'
+        />
+        <button type='submit'>수정</button>
+      </form>
+    </>
   );
 }

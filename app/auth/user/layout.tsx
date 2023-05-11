@@ -4,7 +4,8 @@ export default function SignUpLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className='w-full px-4 py-8 flex flex-col border items-center border-fuchsia-500'>
+    <section className='relative w-full flex flex-col items-center
+                        border border-fuchsia-500 overflow-hidden'>
       {children}
     </section>
   );

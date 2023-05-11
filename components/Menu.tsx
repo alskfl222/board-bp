@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { state } from '@util/state';
+import { useStore } from '@util/store';
 
 const menus: Record<string, any> = {
   'sign-up': {
@@ -21,7 +21,7 @@ const menus: Record<string, any> = {
 
 export default function Menu() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isLogin } = state
+  const isLogin = useStore((state: any) => state.isLogin)
 
   return (
     <div

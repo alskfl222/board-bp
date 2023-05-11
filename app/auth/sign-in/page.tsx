@@ -1,18 +1,34 @@
 'use client';
 
-import { useState } from 'react';
-import { submitLogin } from '@util/fetch';
+import { FormEvent, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import axios from 'axios';
+import { useStore } from '@util/store';
+import { getFetchUrl } from '@util/fetch';
 
-export default function SignUp() {
+export default function SignIn() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const signIn = useStore((state) => state.signIn);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fetchUrl = getFetchUrl(pathname);
+
+    try {
+      await axios.post(fetchUrl, { email, password });
+      signIn()
+      router.push('auth/user');
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  
   return (
     <>
-      <form
-        className='flex flex-col gap-4'
-        onSubmit={submitLogin({ email, password })}
-      >
+      <form className='flex flex-col gap-4' onSubmit={onSubmit}>
         <p>EMAIL: {email}</p>
         <input
           className='text-black'

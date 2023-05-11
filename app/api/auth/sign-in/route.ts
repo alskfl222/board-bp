@@ -4,9 +4,8 @@ import jwt from 'jsonwebtoken';
 import prisma from '@util/db';
 
 export async function POST(request: NextRequest) {
-  const reqData = await request.formData();
-  const email = reqData.get('email') as string | null;
-  const password = reqData.get('password') as string | null;
+  const body = await request.json();
+  const { email, password } = body;
 
   const secret = process.env.JWT_SECRET || 'asdf';
 

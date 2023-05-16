@@ -16,13 +16,30 @@ export default function UserInfo() {
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
 
-  const handleUpdate = (e: FormEvent<HTMLFormElement>) => {
+  const fetchUrl = getFetchUrl(pathname);
+
+  const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
     if (newPassword !== newPasswordConfirm) return alert('Check new password');
+    try {
+      const response = await axios.put(fetchUrl, {
+        id,
+        name,
+        email,
+        password,
+        newPassword,
+      });
+      console.log(response.data);
+    } catch (e) {
+      alert('Fetch Error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     async function initUser() {
-      const fetchUrl = getFetchUrl(pathname);
       try {
         const response = await axios.get(fetchUrl);
         const { id, name, email } = response.data;
@@ -43,7 +60,7 @@ export default function UserInfo() {
     <>
       {isLoading && (
         <div
-          className='absolute w-full h-full flex justify-center items-center
+          className='absolute z-1 w-full h-full flex justify-center items-center
                      bg-neutral-100/90 text-black'
         >
           <div>LOADING...</div>

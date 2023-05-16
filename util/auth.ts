@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import prisma from './db';
 import { User } from '@prisma/client';
 
-export async function validateToken(): Promise<any> {
+export async function validateToken(password?: boolean): Promise<any> {
   const cookieStore = cookies();
   const auth = cookieStore.get('auth');
   if (!auth) {
@@ -22,6 +22,6 @@ export async function validateToken(): Promise<any> {
   const user: Partial<User> | null = await prisma.user.findUnique({
     where: { email: verify.email },
   });
-  delete user?.password;
+  if (!password) delete user?.password;
   return user || { error: 'Invalid User in Token' };
 }

@@ -13,18 +13,15 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
-  const reqData = await request.formData();
-  const email = reqData.get('email') as string | null;
-  const name = reqData.get('name') as string | null;
-  const password = reqData.get('password') as string | null;
-  const newPassword = reqData.get('newPassword') as string | null;
+  const user = await validateToken(true);
+  if (user.error)
+    return NextResponse.json({ error: user.error }, { status: 400 });
+
+  const body = await request.json();
+  const { email, name, password, newPassword } = body;
 
   if (!email || !name || !password)
     return NextResponse.json({ error: 'Invaild Info' }, { status: 400 });
-
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user)
-    return NextResponse.json({ error: 'Not Found User' }, { status: 400 });
 
   const verify = await bcrypt.compare(password, user.password);
   if (!verify)

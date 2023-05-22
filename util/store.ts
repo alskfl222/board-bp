@@ -8,6 +8,6 @@ interface Store {
 
 export const useStore = create<Store>((set) => ({
   isLogin: false,
-  signIn: () => set((state) => ({ isLogin: true })),
+  signIn: () => set({ isLogin: true }),
   signOut: () => set({ isLogin: false }),
 }));

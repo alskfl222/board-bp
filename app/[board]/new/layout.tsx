@@ -1,4 +1,4 @@
-export default function BoardLayout({
+export default function EditorLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -6,7 +6,7 @@ export default function BoardLayout({
   return (
     <section
       className='flex w-full min-h-screen p-2 flex-col items-center justify-between
-                 border border-yellow-300'
+                 border border-dashed border-yellow-500'
     >
       {children}
     </section>

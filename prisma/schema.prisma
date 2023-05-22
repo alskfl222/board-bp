@@ -12,22 +12,45 @@ datasource db {
 
 model User {
   id        Int     @id @default(autoincrement())
+  admin     Admin?
   email     String  @unique
   name      String  
   password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   posts     Post[]
 }
 
 model Board {
   id        Int     @id @default(autoincrement())
   name      String  @unique
+  admin     BoardAdmin[]
   posts     Post[]
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  board     BoardAdmin[]
+}
+
+model BoardAdmin {
+  @@id([boardId, adminId])
+  boardId   Int
+  board     Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  adminId   Int
+  admin     Admin   @relation(fields: [adminId], references: [id], onDelete: Cascade)
 }
 
 model Post {
   id        Int     @id @default(autoincrement())
   boardId   Int     
-  board     Board   @relation(fields: [boardId], references: [id])
+  board     Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
   authorId  Int
-  author    User    @relation(fields: [authorId], references: [id])
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  title     String
+  content   String  @db.MediumText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 }

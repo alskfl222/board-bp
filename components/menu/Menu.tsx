@@ -3,26 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import SubMenu from './SubMenu';
+import SubMenu from '@comp/menu/Submenu';
 import { useStore } from '@util/store';
-
-const loginMenus: Record<string, Record<string, string>> = {
-  user: {
-    path: 'auth/user',
-    name: '회원 정보',
-  },
-};
-
-const logoutMenus: Record<string, Record<string, string>> = {
-  signUp: {
-    path: 'auth/sign-up',
-    name: '회원 가입',
-  },
-  signIn: {
-    path: 'auth/sign-in',
-    name: '로그인',
-  },
-};
+import { loginMenus, logoutMenus, commonMenus } from '@util/menu';
 
 export default function Menu() {
   const router = useRouter();
@@ -57,8 +40,6 @@ export default function Menu() {
     }
   }
 
-
-
   return (
     <div
       ref={menuRef}
@@ -77,6 +58,7 @@ export default function Menu() {
             <SubMenu menus={logoutMenus} />
           )}
           <div>---------</div>
+          <SubMenu menus={commonMenus} />
         </div>
       )}
     </div>

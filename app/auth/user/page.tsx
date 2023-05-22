@@ -4,6 +4,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getFetchUrl } from '@util/fetch';
 import axios from 'axios';
+import Loading from '@comp/Loading';
 
 export default function UserInfo() {
   const router = useRouter();
@@ -38,6 +39,20 @@ export default function UserInfo() {
     }
   };
 
+  const handleDelete = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.delete(fetchUrl);
+      console.log(response.data);
+      alert('Success Delete');
+      router.push('/')
+    } catch (e) {
+      alert('Fetch Delete Error');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     async function initUser() {
       try {
@@ -54,18 +69,11 @@ export default function UserInfo() {
       }
     }
     initUser();
-  }, [router, pathname]);
+  }, [router, fetchUrl]);
 
   return (
     <>
-      {isLoading && (
-        <div
-          className='absolute z-1 w-full h-full flex justify-center items-center
-                     bg-neutral-100/90 text-black'
-        >
-          <div>LOADING...</div>
-        </div>
-      )}
+      {isLoading && <Loading />}
       <form className='flex flex-col gap-4' onSubmit={handleUpdate}>
         <p>NAME: </p>
         <input
@@ -108,6 +116,9 @@ export default function UserInfo() {
         />
         <button type='submit'>수정</button>
       </form>
+      <div>
+        <button onClick={handleDelete}>탈퇴</button>
+      </div>
     </>
   );
 }

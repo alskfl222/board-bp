@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
@@ -26,6 +26,21 @@ export default function Menu() {
   const [isOpen, setIsOpen] = useState(false);
   const isLogin = useStore((state) => state.isLogin);
   const signOut = useStore((state) => state.signOut);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  function handleClickOutside(e: any) {
+    if (menuRef.current && !menuRef.current.contains(e.target)) {
+      setIsOpen(false);
+    }
+  }
 
   async function onClickSignOut() {
     const fetchUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/sign-out`;
@@ -41,6 +56,7 @@ export default function Menu() {
 
   return (
     <div
+      ref={menuRef}
       className='relative z-10 w-full flex flex-col'
       onClick={() => setIsOpen(!isOpen)}
     >

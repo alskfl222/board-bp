@@ -49,9 +49,7 @@ export async function DELETE() {
 
   if (validate.error)
     return NextResponse.json({ error: validate.error }, { status: 400 });
-  if (!validate.user)
-    return NextResponse.json({ error: 'Not Found User' }, { status: 404 });
 
-  await prisma.user.delete({ where: { id: validate.user.id } });
+  await prisma.user.delete({ where: { id: validate.id } });
   return NextResponse.json({ message: 'OK' });
 }

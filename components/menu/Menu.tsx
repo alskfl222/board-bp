@@ -2,11 +2,18 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import axios from 'axios';
+import SubMenu from './SubMenu';
 import { useStore } from '@util/store';
 
-const menus: Record<string, any> = {
+const loginMenus: Record<string, Record<string, string>> = {
+  user: {
+    path: 'auth/user',
+    name: '회원 정보',
+  },
+};
+
+const logoutMenus: Record<string, Record<string, string>> = {
   signUp: {
     path: 'auth/sign-up',
     name: '회원 가입',
@@ -14,10 +21,6 @@ const menus: Record<string, any> = {
   signIn: {
     path: 'auth/sign-in',
     name: '로그인',
-  },
-  user: {
-    path: 'auth/user',
-    name: '회원 정보',
   },
 };
 
@@ -54,6 +57,8 @@ export default function Menu() {
     }
   }
 
+
+
   return (
     <div
       ref={menuRef}
@@ -66,17 +71,12 @@ export default function Menu() {
           className='absolute z-10 top-full w-full p-4 flex flex-col
                      items-end gap-2 bg-slate-900'
         >
-          <Link href={{ pathname: menus.signUp.path }} key={menus.signUp.path}>
-            {menus.signUp.name}
-          </Link>
-          <Link href={{ pathname: menus.signIn.path }} key={menus.signIn.path}>
-            {menus.signIn.name}
-          </Link>
-          <Link href={{ pathname: menus.user.path }} key={menus.user.path}>
-            {menus.user.name}
-          </Link>
-
-          {isLogin && <button onClick={onClickSignOut}>로그 아웃</button>}
+          {isLogin ? (
+            <SubMenu menus={loginMenus} logout={onClickSignOut} />
+          ) : (
+            <SubMenu menus={logoutMenus} />
+          )}
+          <div>---------</div>
         </div>
       )}
     </div>

@@ -1,14 +1,16 @@
 'use client';
 
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, FormEvent, use } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { getFetchUrl } from '@util/fetch';
 import axios from 'axios';
 import Loading from '@comp/Loading';
+import { useStore } from '@util/store';
+import { getFetchUrl } from '@util/fetch';
 
 export default function UserInfo() {
   const router = useRouter();
   const pathname = usePathname();
+  const signOut = useStore((state) => state.signOut);
   const [isLoading, setIsLoading] = useState(true);
   const [id, setId] = useState(0);
   const [name, setName] = useState('');
@@ -45,7 +47,8 @@ export default function UserInfo() {
       const response = await axios.delete(fetchUrl);
       console.log(response.data);
       alert('Success Delete');
-      router.push('/')
+      signOut()
+      router.push('/');
     } catch (e) {
       alert('Fetch Delete Error');
     } finally {

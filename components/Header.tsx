@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Menu from './Menu';
+import Menu from './menu/Menu';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);

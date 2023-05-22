@@ -1,8 +1,16 @@
-import { fetchInter } from '@util/fetchInter';
+import prisma from '@util/db';
+import { redirect } from 'next/navigation';
 
-export default async function BoardList() {
-  const data = await fetchInter();
-  console.log(data);
-
-  return "DB ACCESS DIRECTLY";
+export default async function BoardList({
+  params,
+}: {
+  params: { board: string };
+}) {
+  const board = await prisma.board.findUnique({
+    where: { name: params.board },
+  });
+  if (!board) {
+    redirect('/')
+  }
+  return 'DB ACCESS DIRECTLY';
 }

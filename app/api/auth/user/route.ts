@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as bcrypt from 'bcrypt';
-import prisma from '@/util/db';
+import prisma from '@util/db';
 import { User } from '@prisma/client';
 import { validateToken } from '@util/auth';
 

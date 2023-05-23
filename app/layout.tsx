@@ -1,6 +1,6 @@
 import './globals.css';
 import { Noto_Sans_KR } from 'next/font/google';
-import Header from '@/components/Header';
+import Header from '@comp/Header';
 
 const notoSans = Noto_Sans_KR({ weight: '400', subsets: ['latin'] });
 

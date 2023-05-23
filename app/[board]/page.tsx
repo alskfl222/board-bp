@@ -32,12 +32,15 @@ export default async function BoardList({
       },
     },
     orderBy: {
-      id: 'desc'
-    }
+      id: 'desc',
+    },
   });
 
   return (
-    <div className='w-full'>
+    <div className='w-full p-2 flex flex-col gap-2'>
+      <div>
+        <Link href={{ pathname: `/${board.name}/new` }}>글쓰기</Link>
+      </div>
       {posts.length > 0 &&
         posts.map((post) => {
           return (
@@ -52,7 +55,9 @@ export default async function BoardList({
               <div className='col-span-3 border-r border-dashed border-yellow-700'>
                 {post.title}
               </div>
-              <div className='col-span-2'>{post.author.name} {post.createdAt.toISOString()}</div>
+              <div className='col-span-2'>
+                {post.author.name} {post.createdAt.toISOString()}
+              </div>
             </Link>
           );
         })}

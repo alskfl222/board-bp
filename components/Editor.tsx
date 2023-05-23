@@ -16,10 +16,47 @@ interface Props extends Partial<EventMapping> {
   editorRef: React.MutableRefObject<any>;
 }
 
+const createContainerEl = () => {
+  const container = document.createElement('div');
+  container.style.margin = '6px';
+  container.style.display = 'flex';
+  container.style.flexDirection = 'column';
+
+  const ytText = document.createElement('span');
+  ytText.textContent = '유튜브 영상 주소';
+
+  const ytInput = document.createElement('input');
+  ytInput.placeholder = '유튜브 링크';
+  ytInput.style.marginTop = '.5rem';
+  ytInput.style.height = '1.5rem';
+  ytInput.style.padding = '0 .5rem';
+  ytInput.style.color = '#333';
+
+  const ytButton = document.createElement('button');
+  ytButton.textContent = '확인';
+  ytButton.style.marginTop = '1.5rem';
+  ytButton.style.width = '6rem';
+  ytButton.style.border = '1px solid white';
+  ytButton.style.color = '#aaa';
+  ytButton.addEventListener('mouseover', () => {
+    ytButton.style.backgroundColor = '#aaa';
+    ytButton.style.color = '#333';
+  });
+  ytButton.addEventListener('mouseout', () => {
+    ytButton.style.backgroundColor = 'transparent';
+    ytButton.style.color = '#aaa';
+  });
+
+  container.appendChild(ytText);
+  container.appendChild(ytInput);
+  container.appendChild(ytButton);
+
+  return { container, ytInput, ytButton };
+};
+
 const TuiEditor = ({
   content = '내용을 입력해주세요.',
   editorRef,
-  onChange,
 }: Props) => {
   const toolbarItems = [
     ['heading', 'bold', 'italic'],
@@ -27,7 +64,6 @@ const TuiEditor = ({
     ['ul', 'ol', 'task'],
     ['table', 'link'],
     ['image'],
-    ['code'],
   ];
 
   const getYoutubeId = (url: string) => {
@@ -39,34 +75,22 @@ const TuiEditor = ({
   };
 
   const youtubeToolbarIcon = () => {
-    const container = document.createElement('div');
-    container.className = 'youtube-div';
+    const { container, ytInput, ytButton } = createContainerEl();
 
-    const youtubeInput = document.createElement('input');
-    youtubeInput.id = 'youtube-input';
-    youtubeInput.placeholder = '유튜브 링크';
-
-    const youtubeButton = document.createElement('buton');
-    youtubeButton.className = 'youtube-button';
-    youtubeButton.textContent = '확인';
-
-    container.appendChild(youtubeInput);
-    container.appendChild(youtubeButton);
-
-    youtubeButton.onclick = () => {
-      const value = youtubeInput.value;
+    ytButton.onclick = () => {
+      const value = ytInput.value;
 
       if (!value) return;
       if (!(value.includes('youtu.be') || value.includes('youtube.com'))) {
         alert('유튜브 링크 확인');
-        youtubeInput.value = '';
+        ytInput.value = '';
         return;
       }
 
       const youtubeId = getYoutubeId(value);
       if (!youtubeId) {
         alert('유튜브 ID 확인');
-        youtubeInput.value = '';
+        ytInput.value = '';
         return;
       }
       const existHTML = editorRef.current.getInstance().getHTML();
@@ -74,9 +98,9 @@ const TuiEditor = ({
         .getInstance()
         .setHTML(
           existHTML +
-            `<img src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" contenteditable="false" />`
+            `<p><br></p><img src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" contenteditable="false" />`
         );
-      youtubeInput.value = '';
+      ytInput.value = '';
     };
 
     const toolbar = {
@@ -86,7 +110,7 @@ const TuiEditor = ({
           itemIndex: 3,
           item: {
             name: 'youtube',
-            tooltip: 'youtube',
+            tooltip: '유튜브',
             className: 'toastui-editor-toolbar-icons',
             style: {
               backgroundImage: 'url(/youtube.png)',
@@ -95,8 +119,7 @@ const TuiEditor = ({
             },
             popup: {
               className: 'popup-wrapper',
-              body: container, //위에서 만든 container 적용
-              // style: {}
+              body: container,
             },
           },
         },
@@ -123,23 +146,22 @@ const TuiEditor = ({
             [codeSyntaxHighlight, { highlighter: Prism }],
             youtubeToolbarIcon,
           ]}
-          // hideModeSwitch={true}
+          hideModeSwitch={true}
           usageStatistics={false}
-          onChange={onChange}
           customHTMLRenderer={{
             htmlBlock: {
-              iframe(node) {
-                return [
-                  {
-                    type: 'openTag',
-                    tagName: 'iframe',
-                    outerNewLine: true,
-                    attributes: node.attrs,
-                  },
-                  { type: 'html', content: node.childrenHTML ?? '' },
-                  { type: 'closeTag', tagName: 'iframe', outerNewLine: true },
-                ];
-              },
+              // iframe(node) {
+              //   return [
+              //     {
+              //       type: 'openTag',
+              //       tagName: 'iframe',
+              //       outerNewLine: true,
+              //       attributes: node.attrs,
+              //     },
+              //     { type: 'html', content: node.childrenHTML ?? '' },
+              //     { type: 'closeTag', tagName: 'iframe', outerNewLine: true },
+              //   ];
+              // },
               div(node) {
                 return [
                   {

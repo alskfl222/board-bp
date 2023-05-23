@@ -1,14 +1,13 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
 import { getFetchUrl, createFormData } from '@util/fetch';
 
 export default function SignUp() {
   const router = useRouter();
-  const pathname = usePathname();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -16,7 +15,7 @@ export default function SignUp() {
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const fetchUrl = getFetchUrl(pathname);
+    const fetchUrl = getFetchUrl('/auth');
     const formData = createFormData({ email, password, name });
 
     try {

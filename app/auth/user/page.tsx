@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, FormEvent, use } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { useState, useEffect, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Loading from '@comp/Loading';
 import { useStore } from '@util/store';
@@ -9,7 +9,6 @@ import { getFetchUrl } from '@util/fetch';
 
 export default function UserInfo() {
   const router = useRouter();
-  const pathname = usePathname();
   const signOut = useStore((state) => state.signOut);
   const [isLoading, setIsLoading] = useState(true);
   const [id, setId] = useState(0);
@@ -19,7 +18,7 @@ export default function UserInfo() {
   const [newPassword, setNewPassword] = useState('');
   const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
 
-  const fetchUrl = getFetchUrl(pathname);
+  const fetchUrl = getFetchUrl('/auth');
 
   const handleUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

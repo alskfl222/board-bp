@@ -27,10 +27,16 @@ export async function POST(request: NextRequest) {
     response.cookies.set('auth', token, {
       path: '/',
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: 'strict',
       expires: new Date().getTime() + 60 * 60 * 1000,
     });
     return response;
   }
   return NextResponse.json({ message: 'Invalid password' }, { status: 400 });
+}
+
+export async function OPTIONS() {
+  return new Response('Hello!', {
+    status: 200,
+  });
 }

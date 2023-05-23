@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import prisma from './db';
 import { User } from '@prisma/client';
 
-export async function validateToken(password?: boolean): Promise<any> {
+export async function validateToken(password?: boolean) {
   const cookieStore = cookies();
   const auth = cookieStore.get('auth');
   if (!auth) {

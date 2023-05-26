@@ -7,7 +7,15 @@ interface Store {
 }
 
 export const useStore = create<Store>((set) => ({
-  isLogin: false,
-  signIn: () => set({ isLogin: true }),
-  signOut: () => set({ isLogin: false }),
+  isLogin: JSON.parse(localStorage.getItem('isLogin') || 'false'),
+  signIn: () =>
+    set((state) => {
+      localStorage.setItem('isLogin', 'true');
+      return { ...state, isLogin: true };
+    }),
+  signOut: () =>
+    set((state) => {
+      localStorage.setItem('isLogin', 'false');
+      return { ...state, isLogin: false };
+    }),
 }));

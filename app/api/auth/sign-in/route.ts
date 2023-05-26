@@ -36,7 +36,5 @@ export async function POST(request: NextRequest) {
 }
 
 export async function OPTIONS() {
-  return new Response('Hello!', {
-    status: 200,
-  });
+  return NextResponse.json('OPTIONS!');
 }

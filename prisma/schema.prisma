@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id        Int     @id @default(autoincrement())
-  admin     Admin?
+  admin     Admin[]
   email     String  @unique
   name      String  
   password  String
@@ -24,23 +24,16 @@ model User {
 model Board {
   id        Int     @id @default(autoincrement())
   name      String  @unique
-  admin     BoardAdmin[]
+  admin     Admin[]
   posts     Post[]
 }
 
 model Admin {
   id        Int      @id @default(autoincrement())
-  userId    Int      @unique
+  userId    Int
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  board     BoardAdmin[]
-}
-
-model BoardAdmin {
-  @@id([boardId, adminId])
   boardId   Int
-  board     Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
-  adminId   Int
-  admin     Admin   @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
 }
 
 model Post {

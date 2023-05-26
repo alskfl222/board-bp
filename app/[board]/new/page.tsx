@@ -24,7 +24,7 @@ const convertImageToIframe = (html: string) => {
   let resultHTML = html;
   for (const videoId of videoIds) {
     const imageHTML = `<p><img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" contenteditable="false"><br></p>`;
-    const videoHTML = `<div><iframe width="560" height="315" src="https://www.youtube.com/embad/${videoId}" title="Youtube player" frameborder="0" allowfullscreen></iframe></div>`;
+    const videoHTML = `<div><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" title="Youtube player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
     resultHTML = resultHTML.replace(imageHTML, videoHTML);
   }
   return resultHTML;

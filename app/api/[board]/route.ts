@@ -8,13 +8,13 @@ export async function POST(request: NextRequest) {
   if ('error' in user)
     return NextResponse.json({ error: user.error }, { status: 400 });
 
-  const { board: boardName, title, content } = await request.json();
-  // console.log(boardName, title, content)
+  const boardName = request.nextUrl.pathname.split('/').at(-1);
   const board = await prisma.board.findUnique({ where: { name: boardName } });
 
   if (!board)
     return NextResponse.json({ error: 'Invaild Board Name' }, { status: 400 });
 
+  const { title, content } = await request.json();
   if (!title || !content)
     return NextResponse.json({ error: 'Invaild Info' }, { status: 400 });
 
@@ -37,12 +37,5 @@ export async function POST(request: NextRequest) {
 }
 
 export async function OPTIONS() {
-  return new Response('Hello!', {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, auth',
-    },
-  });
+  return NextResponse.json('OPTIONS!');
 }

@@ -7,3 +7,7 @@ export async function DELETE() {
   });
   return response;
 }
+
+export async function OPTIONS() {
+  return NextResponse.json('OPTIONS!');
+}

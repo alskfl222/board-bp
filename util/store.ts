@@ -2,20 +2,26 @@ import { create } from 'zustand';
 
 interface Store {
   isLogin: boolean;
-  signIn: () => void;
+  userId: number;
+  signIn: (id: number) => void;
   signOut: () => void;
 }
 
 export const useStore = create<Store>((set) => ({
   isLogin: JSON.parse(sessionStorage.getItem('isLogin') || 'false'),
-  signIn: () =>
+  userId: -1,
+  signIn(id: number) {
     set((state) => {
       sessionStorage.setItem('isLogin', 'true');
+      sessionStorage.setItem('userId', `${id}`);
       return { ...state, isLogin: true };
-    }),
-  signOut: () =>
+    });
+  },
+  signOut() {
     set((state) => {
       sessionStorage.setItem('isLogin', 'false');
-      return { ...state, isLogin: false };
-    }),
+      sessionStorage.setItem('userId', `-1`);
+      return { ...state, isLogin: false, userId: -1 };
+    });
+  },
 }));

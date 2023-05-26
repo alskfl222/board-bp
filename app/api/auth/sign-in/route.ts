@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const token = jwt.sign({ name: user.name, email: user.email }, secret, {
       expiresIn: 60 * 60,
     });
-    const response = NextResponse.json({ message: 'OK' });
+    const response = NextResponse.json({ userId: user.id });
     response.cookies.set('auth', token, {
       path: '/',
       httpOnly: true,

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import CommentContainer from '@comp/post/comment/Container';
 import prisma from '@util/db';
 
 export default async function Post({
@@ -26,8 +27,10 @@ export default async function Post({
       <div className='p-2 border border-dashed border-yellow-700'>
         <div>제목: {post.title}</div>
         <div>작성자: {user?.name}</div>
+        <div>작성시간: {post.createdAt.toLocaleString('ko-KR')}</div>
       </div>
       <div className='p-2' dangerouslySetInnerHTML={{ __html: post.content }} />
+      <CommentContainer />
     </div>
   );
 }

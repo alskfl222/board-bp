@@ -18,9 +18,9 @@ export default function SignIn() {
     const fetchUrl = getFetchUrl(pathname);
 
     try {
-      await axios.post(fetchUrl, { email, password });
-      signIn()
-      router.push('auth/user');
+      const res = await axios.post(fetchUrl, { email, password });
+      signIn(res.data.userId)
+      router.push('/');
     } catch (err) {
       console.error(err);
     }

@@ -6,9 +6,15 @@ import axios from 'axios';
 import { getFetchUrl } from '@util/fetch';
 
 export default function CommentItem(commentProps: any) {
-  const { id, parentId, author, content: prevContent, createdAt } = commentProps;
+  const {
+    id,
+    parentId,
+    author,
+    content: prevContent,
+    createdAt,
+  } = commentProps;
   const pathname = usePathname();
-  const [mode, setMode] = useState<'read' | 'modify'>('read');
+  const [mode, setMode] = useState<'read' | 'modify' | 'recomment'>('read');
   const content = useRef(prevContent);
   const [modified, setModified] = useState(prevContent);
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
@@ -46,15 +52,24 @@ export default function CommentItem(commentProps: any) {
       )}
       <div>{createdAt}</div>
       <div>
-        {mode === 'read' ? (
-          <button onClick={() => setMode('modify')}>수정</button>
-        ) : (
+        {mode === 'read' && (
+          <>
+            <button onClick={() => setMode('recomment')}>대댓글</button>
+            <button onClick={() => setMode('modify')}>수정</button>
+          </>
+        )}
+        {(
           <>
             <button onClick={onSubmit}>확인</button>
             <button onClick={onClickCancel}>취소</button>
           </>
         )}
       </div>
+      {mode === 'recomment' && (
+        <div>
+          <input />
+        </div>
+      )}
     </div>
   );
 }

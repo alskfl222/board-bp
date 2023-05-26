@@ -5,8 +5,7 @@ export default function BoardLayout({
 }) {
   return (
     <section
-      className='flex w-full min-h-screen flex-col items-center justify-between
-                 border border-yellow-300'
+      className='w-full min-h-[calc(100vh-3rem)] p-2 flex flex-col border border-yellow-300'
     >
       {children}
     </section>

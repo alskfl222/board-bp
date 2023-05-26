@@ -1,47 +1,33 @@
-'use client';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import prisma from '@util/db';
 
-import { useState, useEffect, useRef } from 'react';
-import { usePathname } from 'next/navigation';
-import dynamic from 'next/dynamic';
-// import TuiViewer from '@comp/Viewer';
-import { getFetchUrl } from '@util/fetch';
-import axios from 'axios';
+export default async function Post({
+  params,
+}: {
+  params: { board: string; postId: string };
+}) {
+  const postId = parseInt(params.postId);
+  const post = await prisma.post.findUnique({ where: { id: postId } });
+  if (!post) redirect(`/${params.board}`);
 
-const Viewer = dynamic(() => import('@comp/Viewer'), {
-  ssr: false,
-});
-
-export default function Post() {
-  const viewerRef = useRef<any>(null);
-  const pathname = usePathname();
-  const [content, setContent] = useState('asdf');
-
-  useEffect(() => {
-    const fetchUrl = getFetchUrl(pathname);
-    async function getContent() {
-      try {
-        const res = await axios.get(fetchUrl);
-        setContent(res.data.post.content);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-    getContent();
-  }, [pathname]);
+  const user = await prisma.user.findUnique({ where: { id: post.authorId } });
 
   return (
-    <div>
-      {/* <iframe
-        itemType='text/html'
-        width='560'
-        height='315'
-        src='https://www.youtube.com/embed/5I_elKORA5w'
-        title='Youtube player'
-        frameBorder='0'
-        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-        allowFullScreen
-      ></iframe> */}
-      <Viewer viewerRef={viewerRef} content={content} />
+    <div className='flex flex-col'>
+      <div className='p-2'>
+        <Link
+          className='text-sm font-bold'
+          href={{ pathname: `/${params.board}` }}
+        >
+          목록으로
+        </Link>
+      </div>
+      <div className='p-2 border border-dashed border-yellow-700'>
+        <div>제목: {post.title}</div>
+        <div>작성자: {user?.name}</div>
+      </div>
+      <div className='p-2' dangerouslySetInnerHTML={{ __html: post.content }} />
     </div>
   );
 }

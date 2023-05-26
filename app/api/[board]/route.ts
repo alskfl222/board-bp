@@ -3,12 +3,15 @@ import prisma from '@util/db';
 import { validateToken } from '@util/auth';
 import { Post } from '@prisma/client';
 
-export async function POST(request: NextRequest) {
+export async function POST(
+  request: NextRequest,
+  { params }: { params: { board: string } }
+) {
   const user = await validateToken();
   if ('error' in user)
     return NextResponse.json({ error: user.error }, { status: 400 });
 
-  const boardName = request.nextUrl.pathname.split('/').at(-1);
+  const boardName = params.board;
   const board = await prisma.board.findUnique({ where: { name: boardName } });
 
   if (!board)
@@ -28,7 +31,7 @@ export async function POST(request: NextRequest) {
       },
     });
     return NextResponse.json(
-      { data: res },
+      { post: res },
       { headers: { 'Access-Control-Allow-Origin': '*' } }
     );
   } catch (e) {

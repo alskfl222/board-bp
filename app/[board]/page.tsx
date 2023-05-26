@@ -37,7 +37,7 @@ export default async function BoardList({
   });
 
   return (
-    <div className='w-full p-2 flex flex-col gap-2'>
+    <>
       <div>
         <Link href={{ pathname: `/${board.name}/new` }}>글쓰기</Link>
       </div>
@@ -61,6 +61,6 @@ export default async function BoardList({
             </Link>
           );
         })}
-    </div>
+    </>
   );
 }

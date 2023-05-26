@@ -1,12 +1,12 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 // import Editor from '@comp/Editor';
 import { useStore } from '@util/store';
 import { getFetchUrl } from '@util/fetch';
-import dynamic from 'next/dynamic';
-import { redirect } from 'next/navigation';
 
 const Editor = dynamic(() => import('@comp/Editor'), {
   ssr: false,
@@ -31,6 +31,7 @@ const convertImageToIframe = (html: string) => {
 };
 
 export default function CreatePost({ params }: { params: { board: string } }) {
+  const router = useRouter();
   const isLogin = useStore((state) => state.isLogin);
   const [title, setTitle] = useState('');
   const titleRef = useRef<HTMLInputElement | null>(null);
@@ -38,8 +39,8 @@ export default function CreatePost({ params }: { params: { board: string } }) {
   const fetchUrl = getFetchUrl(`/${params.board}`);
 
   useEffect(() => {
-    if (!isLogin) redirect(`/${params.board}`);
-  }, [isLogin, params]);
+    if (!isLogin) router.push(`/${params.board}`);
+  }, [router, isLogin, params]);
 
   const onSubmit = async () => {
     const rawHTML = editorRef.current.getInstance().getHTML();
@@ -51,7 +52,7 @@ export default function CreatePost({ params }: { params: { board: string } }) {
     };
     try {
       const response = await axios.post(fetchUrl, body);
-      console.log(response.data);
+      router.push(`/${params.board}/${response.data.post.id}`);
     } catch (err) {
       console.error(err);
     }

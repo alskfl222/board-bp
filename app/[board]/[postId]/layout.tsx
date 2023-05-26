@@ -5,8 +5,7 @@ export default function PostLayout({
 }) {
   return (
     <section
-      className='flex w-full min-h-screen p-2 flex-col items-center justify-between
-                 border border-yellow-500'
+      className='w-full flex flex-col border border-yellow-500'
     >
       {children}
     </section>

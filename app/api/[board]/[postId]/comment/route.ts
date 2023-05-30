@@ -8,17 +8,25 @@ export async function GET(
 ) {
   const res = await prisma.comment.findMany({
     where: { postId: parseInt(params.postId) },
-    include: {
-      author: true,
-    },
+    include: { author: true },
   });
 
-  const comments = res.map((comment) => {
+  const processed = res.map((comment) => {
     return {
       ...comment,
       author: comment.author.name,
       authorId: undefined,
     };
+  });
+
+  const comments = processed.filter((comment) => !comment.parentId);
+  const re = processed.filter((comment) => comment.parentId);
+
+  re.forEach((comment) => {
+    const root = comments.find((root) => root.id === comment.parentId) as any;
+    if (!root) return;
+    if (!root.comments) root.comments = [];
+    root.comments = [...root.comments, comment];
   });
 
   return NextResponse.json({ comments });
@@ -43,7 +51,12 @@ export async function POST(
         content,
       },
     });
-    return NextResponse.json(res, { status: 201 });
+    const comment = {
+      ...res,
+      author: user.name,
+      authorId: undefined,
+    };
+    return NextResponse.json(comment, { status: 201 });
   } catch (err) {
     console.log(err);
     return NextResponse.json({ error: err }, { status: 400 });
@@ -70,3 +83,5 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: err }, { status: 400 });
   }
 }
+
+export async func

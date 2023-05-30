@@ -6,24 +6,33 @@ import axios from 'axios';
 import CommentItem from './Comment';
 import { getFetchUrl } from '@util/fetch';
 
+export interface Comment {
+  id: number;
+  postId: number;
+  parentId: number | null;
+  author: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  comments: Comment[];
+}
+
 export default function CommentViewer() {
   const pathname = usePathname();
-  const [comments, setComments] = useState<any[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
 
   useEffect(() => {
     async function initData() {
       try {
-        const res = await axios.get(fetchUrl);
-        setComments(res.data.comments);
+        const res = await axios.get(fetchUrl).then((res) => res.data);
+        setComments(res.comments);
       } catch (err) {
         console.log(err);
       }
     }
     initData();
   }, [fetchUrl]);
-
-  console.log(comments);
 
   return (
     <div>

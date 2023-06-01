@@ -15,7 +15,6 @@ export async function GET(
     return {
       ...comment,
       author: comment.author.name,
-      authorId: undefined,
     };
   });
 
@@ -54,7 +53,6 @@ export async function POST(
     const comment = {
       ...res,
       author: user.name,
-      authorId: undefined,
     };
     return NextResponse.json(comment, { status: 201 });
   } catch (err) {
@@ -70,6 +68,12 @@ export async function PUT(request: NextRequest) {
 
   const { id, content } = await request.json();
 
+  const check = await prisma.comment.findUnique({ where: { id } });
+  if (!check)
+    return NextResponse.json({ error: 'Invalid Comment ID' }, { status: 400 });
+  if (check.authorId !== user.id)
+    return NextResponse.json({ error: 'Not Your Comment' }, { status: 403 });
+
   try {
     const res = await prisma.comment.update({
       where: { id: parseInt(id) },
@@ -83,5 +87,3 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: err }, { status: 400 });
   }
 }
-
-export async func

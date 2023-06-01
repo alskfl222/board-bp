@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import axios from 'axios';
 import { getFetchUrl } from '@util/fetch';
 
-export default function CommentInput() {
+export default function Input() {
   const pathname = usePathname();
   const [comment, setComment] = useState('');
   const fetchUrl = getFetchUrl(`${pathname}/comment`);

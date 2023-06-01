@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import CommentContainer from '@comp/post/comment/Container';
+import Container from '@comp/post/comment/Container';
 import prisma from '@util/db';
 
 export default async function Post({
@@ -30,7 +30,7 @@ export default async function Post({
         <div>작성시간: {post.createdAt.toLocaleString('ko-KR')}</div>
       </div>
       <div className='p-2' dangerouslySetInnerHTML={{ __html: post.content }} />
-      <CommentContainer />
+      <Container />
     </div>
   );
 }

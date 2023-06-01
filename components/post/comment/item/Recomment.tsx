@@ -4,7 +4,7 @@ import axios from 'axios';
 import { getFetchUrl } from '@util/fetch';
 import { KeyedMutator } from 'swr';
 
-export function Recomment({
+export default function Recomment({
   id,
   parentId,
   setMode,

@@ -1,33 +1,17 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { usePathname } from 'next/navigation';
-import axios from 'axios';
-import { getFetchUrl } from '@util/fetch';
-import { Read, Modify } from './Button';
-import { Recomment } from './Recomment';
+import { KeyedMutator } from 'swr';
+import Info from './Info';
+import Recomment from './Recomment';
 import type { Comment } from '../Container';
 
-export default function Item(comment: Comment) {
-  const {
-    id,
-    parentId,
-    author,
-    authorId,
-    content: prevContent,
-    createdAt,
-    comments,
-    mutate,
-  } = comment;
-  const pathname = usePathname();
+export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {
+  const { id, parentId, content: prevContent, comments, mutate } = comment;
   const content = useRef(prevContent);
   const [mode, setMode] = useState<'read' | 'modify' | 'recomment'>('read');
-  const [isExpanded, setIsExpanded] = useState(false);
   const [inputText, setInputText] = useState(prevContent);
-
-  const fetchUrl = getFetchUrl(`${pathname}/comment`);
-
-
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const onClickCancel = () => {
     setInputText(content.current);
@@ -37,7 +21,13 @@ export default function Item(comment: Comment) {
   return (
     <div>
       <div className='p-2 flex flex-col border border-lime-500'>
-
+        <Info
+          {...comment}
+          mode={mode}
+          content={content}
+          setMode={setMode}
+          onClickCancel={onClickCancel}
+        />
         {mode !== 'modify' ? (
           <div>{content.current}</div>
         ) : (
@@ -53,9 +43,7 @@ export default function Item(comment: Comment) {
           {isExpanded ? (
             <>
               {comments.map((comment) => {
-                return (
-                  <Item key={comment.id} {...comment} mutate={mutate} />
-                );
+                return <Item key={comment.id} {...comment} mutate={mutate} />;
               })}
               <button onClick={() => setIsExpanded(false)}>접기</button>
             </>

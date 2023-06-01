@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
 import Item from './item/Item';
 import { getFetchUrl } from '@util/fetch';
 import Input from './Input';
-import useSWR, { KeyedMutator } from 'swr';
+import useSWR from 'swr';
 
 export interface Comment {
   id: number;
@@ -18,7 +17,6 @@ export interface Comment {
   createdAt: string;
   updatedAt: string;
   comments: Comment[];
-  mutate: KeyedMutator<any>;
 }
 
 export default function Container() {
@@ -31,8 +29,6 @@ export default function Container() {
 
   if (isLoading) return <div>로딩중</div>;
   const comments = data.comments as Comment[];
-
-  console.log(data);
 
   return (
     <div className='border border-lime-300'>

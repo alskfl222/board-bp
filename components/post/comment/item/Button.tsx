@@ -47,23 +47,3 @@ export function Modify({
   );
 }
 
-export function Recomment({
-  recomment,
-  setRecomment,
-  onSubmitRecomment,
-  onClickCancel,
-}: any) {
-  return (
-    <div className='w-full flex justify-between'>
-      <input
-        className='text-black'
-        value={recomment}
-        onChange={(e) => setRecomment(e.target.value)}
-      />
-      <div>
-        <button onClick={onSubmitRecomment}>확인</button>
-        <button onClick={onClickCancel}>취소</button>
-      </div>
-    </div>
-  );
-}

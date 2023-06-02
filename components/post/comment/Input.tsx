@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
-import { getFetchUrl, exceptionHandler } from '@util';
 import { KeyedMutator } from 'swr';
-import CommentEmoticonContainer from '@comp/emoticon/Comment';
+import { getFetchUrl, exceptionHandler } from '@util';
+import EmoticonList from '@comp/post/comment/emoticon/List';
 
 export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
   const pathname = usePathname();
@@ -26,7 +26,7 @@ export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
     <div className='p-2 flex flex-col border border-lime-500'>
       {isExpanded ? (
         <div>
-          <CommentEmoticonContainer />
+          <EmoticonList />
           <button onClick={() => setIsExpanded(false)}>접기</button>
         </div>
       ) : (

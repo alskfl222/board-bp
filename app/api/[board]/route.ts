@@ -32,7 +32,6 @@ export async function POST(
     });
     return NextResponse.json(
       { post: res },
-      { headers: { 'Access-Control-Allow-Origin': '*' } }
     );
   } catch (e) {
     return NextResponse.json({ error: e }, { status: 400 });

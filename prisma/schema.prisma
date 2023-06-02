@@ -20,6 +20,7 @@ model User {
   updatedAt DateTime @updatedAt
   posts     Post[]
   comments  Comment[]
+  emoticons UserEmoticon[]
 }
 
 model Board {
@@ -62,4 +63,32 @@ model Comment {
   comments  Comment[]  @relation("CommentToComment")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
+}
+
+model EmoticonList {
+  id        Int     @id @default(autoincrement())
+  name      String  @unique
+  presented String  @unique
+  thumbnail String  @default("")
+  author    String
+  reference String
+  emoticons Emoticon[]
+  users     UserEmoticon[]
+}
+
+model UserEmoticon {
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+  listId    Int
+  list      EmoticonList  @relation(fields: [listId], references: [id])
+
+  @@id([userId, listId])
+}
+
+model Emoticon {
+  id        Int     @id @default(autoincrement())
+  path      String
+  name      String
+  listId    Int
+  list      EmoticonList  @relation(fields: [listId], references: [id], onDelete: Cascade)
 }

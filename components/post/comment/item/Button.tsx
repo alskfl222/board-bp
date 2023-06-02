@@ -18,7 +18,7 @@ export function Read({
   onClickDelete: () => Promise<void>;
 }) {
   return (
-    <>
+    <div>
       {!parentId && (
         <button onClick={() => setMode('recomment')}>대댓글</button>
       )}
@@ -28,7 +28,7 @@ export function Read({
           <button onClick={onClickDelete}>삭제</button>
         </>
       )}
-    </>
+    </div>
   );
 }
 
@@ -40,10 +40,9 @@ export function Modify({
   onClickCancel: any;
 }) {
   return (
-    <>
+    <div>
       <button onClick={onSubmit}>확인</button>
       <button onClick={onClickCancel}>취소</button>
-    </>
+    </div>
   );
 }
-

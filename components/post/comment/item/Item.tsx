@@ -1,9 +1,13 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { usePathname } from 'next/navigation';
+import axios from 'axios';
 import { KeyedMutator } from 'swr';
 import Info from './Info';
+import { Modify } from './Button';
 import Recomment from './Recomment';
+import { getFetchUrl } from '@util/fetch';
 import type { Comment } from '../Container';
 
 export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {
@@ -12,6 +16,27 @@ export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {
   const [mode, setMode] = useState<'read' | 'modify' | 'recomment'>('read');
   const [inputText, setInputText] = useState(prevContent);
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const pathname = usePathname();
+  const fetchUrl = getFetchUrl(`${pathname}/comment`);
+
+  const onSubmitModify = async () => {
+    if (content.current === inputText) {
+      setMode('read');
+      return;
+    }
+    try {
+      const res = await axios.put(fetchUrl, {
+        id,
+        content: inputText,
+      });
+      content.current = res.data.content;
+      setInputText(res.data.content);
+      setMode('read');
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const onClickCancel = () => {
     setInputText(content.current);
@@ -31,22 +56,25 @@ export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {
         {mode !== 'modify' ? (
           <div>{content.current}</div>
         ) : (
-          <input
-            className='text-black'
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-          />
+          <div className='flex justify-between'>
+            <input
+              className='text-black'
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+            />
+            <Modify onSubmit={onSubmitModify} onClickCancel={onClickCancel} />
+          </div>
         )}
       </div>
       {comments && comments.length > 0 && (
         <div className='p-2 border'>
           {isExpanded ? (
-            <>
+            <div className='flex justify-between'>
               {comments.map((comment) => {
                 return <Item key={comment.id} {...comment} mutate={mutate} />;
               })}
               <button onClick={() => setIsExpanded(false)}>접기</button>
-            </>
+            </div>
           ) : (
             <button onClick={() => setIsExpanded(true)}>
               대댓글 {comments.length}개

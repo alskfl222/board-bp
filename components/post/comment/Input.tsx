@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import axios from 'axios';
 import { getFetchUrl, exceptionHandler } from '@util';
 import { KeyedMutator } from 'swr';
+import CommentEmoticonContainer from '@comp/emoticon/Comment';
 
 export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
-  const router = useRouter();
   const pathname = usePathname();
   const [comment, setComment] = useState('');
+  const [isExpanded, setIsExpanded] = useState(false);
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
 
   const onSubmit = async () => {
@@ -20,8 +21,17 @@ export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
       exceptionHandler(err);
     }
   };
+
   return (
-    <div className='p-2 border border-lime-500'>
+    <div className='p-2 flex flex-col border border-lime-500'>
+      {isExpanded ? (
+        <div>
+          <CommentEmoticonContainer />
+          <button onClick={() => setIsExpanded(false)}>접기</button>
+        </div>
+      ) : (
+        <button onClick={() => setIsExpanded(true)}>이모티콘</button>
+      )}
       <input
         className='text-black'
         value={comment}

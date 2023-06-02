@@ -4,12 +4,12 @@ import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Loading from '@comp/Loading';
-import { useStore } from '@store/user';
-import { getFetchUrl } from '@util';
+import { useUserStore } from '@store/user';
+import { exceptionHandler, getFetchUrl } from '@util';
 
 export default function UserInfo() {
   const router = useRouter();
-  const signOut = useStore((state) => state.signOut);
+  const signOut = useUserStore((state) => state.signOut);
   const [isLoading, setIsLoading] = useState(true);
   const [id, setId] = useState(0);
   const [name, setName] = useState('');
@@ -34,7 +34,7 @@ export default function UserInfo() {
       });
       console.log(response.data);
     } catch (e) {
-      alert('Fetch Error');
+      exceptionHandler(e);
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +49,7 @@ export default function UserInfo() {
       signOut();
       router.push('/');
     } catch (e) {
-      alert('Fetch Delete Error');
+      exceptionHandler(e);
     } finally {
       setIsLoading(false);
     }
@@ -64,8 +64,7 @@ export default function UserInfo() {
         setName(name);
         setEmail(email);
       } catch (e) {
-        alert('Invalid Token');
-        router.push('auth/sign-in');
+        exceptionHandler(e);
       } finally {
         setIsLoading(false);
       }

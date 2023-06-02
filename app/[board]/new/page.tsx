@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 // import Editor from '@comp/Editor';
-import { useStore } from '@store/user';
+import { useUserStore } from '@store/user';
 import { getFetchUrl } from '@util';
 
 const Editor = dynamic(() => import('@comp/Editor'), {
@@ -32,7 +32,7 @@ const convertImageToIframe = (html: string) => {
 
 export default function CreatePost({ params }: { params: { board: string } }) {
   const router = useRouter();
-  const isLogin = useStore((state) => state.isLogin);
+  const isLogin = useUserStore((state) => state.isLogin);
   const [title, setTitle] = useState('');
   const titleRef = useRef<HTMLInputElement | null>(null);
   const editorRef = useRef<any>(null);

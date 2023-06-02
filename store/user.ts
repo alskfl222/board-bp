@@ -7,7 +7,7 @@ interface Store {
   signOut: () => void;
 }
 
-export const useStore = create<Store>((set) => ({
+export const useUserStore = create<Store>((set) => ({
   isLogin: JSON.parse(sessionStorage.getItem('isLogin') || 'false'),
   userId: -1,
   signIn(id: number) {
@@ -25,3 +25,5 @@ export const useStore = create<Store>((set) => ({
     });
   },
 }));
+
+

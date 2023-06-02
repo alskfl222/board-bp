@@ -2,9 +2,9 @@ import { MutableRefObject, Dispatch, SetStateAction } from 'react';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
 import { KeyedMutator } from 'swr';
-import { getFetchUrl } from '@util';
 import { Read } from './Button';
 import type { Comment } from '../Container';
+import { exceptionHandler, getFetchUrl, toPrettyKST } from '@util';
 
 export default function Info(
   info: Omit<Comment, 'content'> & {
@@ -25,14 +25,16 @@ export default function Info(
       await axios.delete(`${fetchUrl}/${id}`);
       await mutate();
       setMode('read');
-    } catch (err) {}
+    } catch (err) {
+      exceptionHandler(err);
+    }
   };
 
   return (
     <div className='w-full flex justify-between'>
       <div>{author}</div>
       <div>
-        <div>{createdAt}</div>
+        <div>{toPrettyKST(createdAt)}</div>
         <div>
           {mode === 'read' ? (
             <Read

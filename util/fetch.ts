@@ -1,3 +1,5 @@
+import { useUserStore } from '@store/user';
+
 export function createFormData(data: Record<string, any>) {
   const formData = new FormData();
   Object.keys(data).forEach((key) => {
@@ -17,9 +19,10 @@ export function getFetchUrl(endpoint: string) {
 
 export function exceptionHandler(err: any) {
   if (err.response) {
-    if (err.response.data.error === 'No Token')
+    if (err.response.data.error === 'No Token') {
+      useUserStore.getState().signOut();
       window.location.href = '/auth/sign-in';
-    else console.log(err.response.data);
+    } else console.log(err.response.data);
   } else {
     console.log(err);
   }

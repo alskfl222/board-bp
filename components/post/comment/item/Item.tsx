@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation';
 import axios from 'axios';
 import { KeyedMutator } from 'swr';
 import Info from './Info';
-import { Modify } from './Button';
 import Recomment from './Recomment';
-import { getFetchUrl } from '@util';
+import { Modify } from './Button';
+import { exceptionHandler, getFetchUrl } from '@util';
 import type { Comment } from '../Container';
 
 export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {
@@ -34,7 +34,7 @@ export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {
       setInputText(res.data.content);
       setMode('read');
     } catch (err) {
-      console.log(err);
+      exceptionHandler(err)
     }
   };
 
@@ -69,7 +69,7 @@ export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {
       {comments && comments.length > 0 && (
         <div className='p-2 border'>
           {isExpanded ? (
-            <div className='flex justify-between'>
+            <div className='flex flex-col justify-between'>
               {comments.map((comment) => {
                 return <Item key={comment.id} {...comment} mutate={mutate} />;
               })}

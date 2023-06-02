@@ -3,13 +3,13 @@
 import { FormEvent, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import axios from 'axios';
-import { useStore } from '@store/user';
+import { useUserStore } from '@store/user';
 import { getFetchUrl } from '@util';
 
 export default function SignIn() {
   const router = useRouter();
   const pathname = usePathname();
-  const signIn = useStore((state) => state.signIn);
+  const signIn = useUserStore((state) => state.signIn);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -42,7 +42,7 @@ export default function SignIn() {
           className='text-black'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
+          autoComplete='current-password'
         />
         <button type='submit'>로그인</button>
       </form>

@@ -4,14 +4,14 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import SubMenu from '@comp/menu/Submenu';
-import { useStore } from '@store/user';
+import { useUserStore } from '@store/user';
 import { loginMenus, logoutMenus, commonMenus } from '@data/menu';
 
 export default function Menu() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const isLogin = useStore((state) => state.isLogin);
-  const signOut = useStore((state) => state.signOut);
+  const isLogin = useUserStore((state) => state.isLogin);
+  const signOut = useUserStore((state) => state.signOut);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

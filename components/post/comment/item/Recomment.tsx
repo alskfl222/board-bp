@@ -1,7 +1,7 @@
 import { useState, Dispatch, SetStateAction } from 'react';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
-import { getFetchUrl } from '@util/fetch';
+import { getFetchUrl } from '@util';
 import { KeyedMutator } from 'swr';
 
 export default function Recomment({

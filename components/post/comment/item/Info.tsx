@@ -2,7 +2,7 @@ import { MutableRefObject, Dispatch, SetStateAction } from 'react';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
 import { KeyedMutator } from 'swr';
-import { getFetchUrl } from '@util/fetch';
+import { getFetchUrl } from '@util';
 import { Read } from './Button';
 import type { Comment } from '../Container';
 
@@ -15,16 +15,8 @@ export default function Info(
     mutate: KeyedMutator<any>;
   }
 ) {
-  const {
-    id,
-    parentId,
-    author,
-    authorId,
-    createdAt,
-    mode,
-    setMode,
-    mutate,
-  } = info;
+  const { id, parentId, author, authorId, createdAt, mode, setMode, mutate } =
+    info;
   const pathname = usePathname();
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
 

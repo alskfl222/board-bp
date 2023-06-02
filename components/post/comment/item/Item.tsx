@@ -7,7 +7,7 @@ import { KeyedMutator } from 'swr';
 import Info from './Info';
 import { Modify } from './Button';
 import Recomment from './Recomment';
-import { getFetchUrl } from '@util/fetch';
+import { getFetchUrl } from '@util';
 import type { Comment } from '../Container';
 
 export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {

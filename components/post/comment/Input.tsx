@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
-import { getFetchUrl } from '@util/fetch';
+import { getFetchUrl } from '@util';
 
 export default function Input() {
   const pathname = usePathname();

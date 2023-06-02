@@ -4,8 +4,8 @@ import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Loading from '@comp/Loading';
-import { useStore } from '@util/store';
-import { getFetchUrl } from '@util/fetch';
+import { useStore } from '@store/user';
+import { getFetchUrl } from '@util';
 
 export default function UserInfo() {
   const router = useRouter();
@@ -46,7 +46,7 @@ export default function UserInfo() {
       const response = await axios.delete(fetchUrl);
       console.log(response.data);
       alert('Success Delete');
-      signOut()
+      signOut();
       router.push('/');
     } catch (e) {
       alert('Fetch Delete Error');

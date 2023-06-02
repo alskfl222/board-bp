@@ -20,7 +20,7 @@ export const useStore = create<Store>((set) => ({
   signOut() {
     set((state) => {
       sessionStorage.setItem('isLogin', 'false');
-      sessionStorage.setItem('userId', `-1`);
+      sessionStorage.setItem('userId', '-1');
       return { ...state, isLogin: false, userId: -1 };
     });
   },

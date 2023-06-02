@@ -3,8 +3,8 @@
 import { FormEvent, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import axios from 'axios';
-import { useStore } from '@util/store';
-import { getFetchUrl } from '@util/fetch';
+import { useStore } from '@store/user';
+import { getFetchUrl } from '@util';
 
 export default function SignIn() {
   const router = useRouter();
@@ -19,13 +19,13 @@ export default function SignIn() {
 
     try {
       const res = await axios.post(fetchUrl, { email, password });
-      signIn(res.data.userId)
+      signIn(res.data.userId);
       router.push('/');
     } catch (err) {
       console.error(err);
     }
   }
-  
+
   return (
     <>
       <form className='flex flex-col gap-4' onSubmit={onSubmit}>

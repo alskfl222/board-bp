@@ -5,8 +5,8 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 // import Editor from '@comp/Editor';
-import { useStore } from '@util/store';
-import { getFetchUrl } from '@util/fetch';
+import { useStore } from '@store/user';
+import { getFetchUrl } from '@util';
 
 const Editor = dynamic(() => import('@comp/Editor'), {
   ssr: false,

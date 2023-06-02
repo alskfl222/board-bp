@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateToken } from '@util/auth';
-import prisma from '@util/db';
+import { validateToken } from '@auth';
+import prisma from '@db';
 
 export async function DELETE(
   _: NextRequest,

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import Container from '@comp/post/comment/Container';
-import prisma from '@util/db';
+import prisma from '@db';
 
 export default async function Post({
   params,

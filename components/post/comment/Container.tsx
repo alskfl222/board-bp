@@ -2,10 +2,10 @@
 
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
-import Item from './item/Item';
-import { getFetchUrl } from '@util/fetch';
-import Input from './Input';
 import useSWR from 'swr';
+import Input from './Input';
+import Item from './item/Item';
+import { getFetchUrl } from '@util';
 
 export interface Comment {
   id: number;

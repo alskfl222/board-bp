@@ -22,7 +22,11 @@
     "paths": {
       "@api/*": ["./app/api/*"],
       "@comp/*": ["./components/*"],
-      "@util/*": ["./util/*"]
+      "@util": ["./util/index.ts"],
+      "@db": ["./db/index.ts"],
+      "@store/*": ["./store/*"],
+      "@auth": ["./auth/index.ts"],
+      "@data/*": ["./data/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

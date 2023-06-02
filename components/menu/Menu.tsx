@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import SubMenu from '@comp/menu/Submenu';
-import { useStore } from '@util/store';
-import { loginMenus, logoutMenus, commonMenus } from '@util/menu';
+import { useStore } from '@store/user';
+import { loginMenus, logoutMenus, commonMenus } from '@data/menu';
 
 export default function Menu() {
   const router = useRouter();

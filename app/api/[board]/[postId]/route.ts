@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@util/db';
-import { validateToken } from '@util/auth';
+import prisma from '@db';
+import { validateToken } from '@auth';
 
 export async function GET(
   _: NextRequest,
@@ -37,7 +37,9 @@ export async function DELETE(
   const post = await prisma.post.findUnique({ where: { id: postId } });
   if (!post)
     return NextResponse.json({ error: 'Invalid postId' }, { status: 400 });
-  const board = await prisma.board.findUnique({ where: { name: params.board } });
+  const board = await prisma.board.findUnique({
+    where: { name: params.board },
+  });
   if (!board)
     return NextResponse.json({ error: 'Invalid board' }, { status: 400 });
   const admin = await prisma.admin.findFirst({

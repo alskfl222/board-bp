@@ -14,3 +14,4 @@ export function createFormData(data: Record<string, any>) {
 export function getFetchUrl(endpoint: string) {
   return `${process.env.NEXT_PUBLIC_SERVER_URL}${endpoint}`;
 }
+

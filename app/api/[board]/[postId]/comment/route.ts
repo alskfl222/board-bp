@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@util/db';
-import { validateToken } from '@util/auth';
+import prisma from '@db';
+import { validateToken } from '@auth';
 
 export async function GET(
   _: NextRequest,

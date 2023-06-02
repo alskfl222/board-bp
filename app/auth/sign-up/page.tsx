@@ -4,7 +4,7 @@ import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import axios from 'axios';
-import { getFetchUrl, createFormData } from '@util/fetch';
+import { getFetchUrl, createFormData } from '@util';
 
 export default function SignUp() {
   const router = useRouter();

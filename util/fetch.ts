@@ -15,3 +15,12 @@ export function getFetchUrl(endpoint: string) {
   return `${process.env.NEXT_PUBLIC_SERVER_URL}${endpoint}`;
 }
 
+export function exceptionHandler(err: any) {
+  if (err.response) {
+    if (err.response.data.error === 'No Token')
+      window.location.href = '/auth/sign-in';
+    else console.log(err.response.data);
+  } else {
+    console.log(err);
+  }
+}

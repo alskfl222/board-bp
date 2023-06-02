@@ -20,7 +20,7 @@ export default function SignIn() {
     try {
       const res = await axios.post(fetchUrl, { email, password });
       signIn(res.data.userId);
-      router.push('/');
+      router.back();
     } catch (err) {
       console.error(err);
     }
@@ -34,6 +34,7 @@ export default function SignIn() {
           className='text-black'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete='username'
         />
         <p>PASSWORD: {password.length}</p>
         <input
@@ -41,6 +42,7 @@ export default function SignIn() {
           className='text-black'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete="current-password"
         />
         <button type='submit'>로그인</button>
       </form>

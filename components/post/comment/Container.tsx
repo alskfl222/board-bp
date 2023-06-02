@@ -5,6 +5,7 @@ import axios from 'axios';
 import useSWR from 'swr';
 import Input from './Input';
 import Item from './item/Item';
+import Loading from '@comp/Loading';
 import { getFetchUrl } from '@util';
 
 export interface Comment {
@@ -27,7 +28,7 @@ export default function Container() {
     axios.get(url).then((res) => res.data)
   );
 
-  if (isLoading) return <div>로딩중</div>;
+  if (isLoading) return <Loading />;
   const comments = data.comments as Comment[];
 
   return (
@@ -42,7 +43,7 @@ export default function Container() {
           <div>댓글 없음</div>
         )}
       </div>
-      <Input />
+      <Input mutate={mutate} />
     </div>
   );
 }

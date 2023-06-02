@@ -1,11 +1,11 @@
-'use client';
-
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import axios from 'axios';
-import { getFetchUrl } from '@util';
+import { getFetchUrl, exceptionHandler } from '@util';
+import { KeyedMutator } from 'swr';
 
-export default function Input() {
+export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
+  const router = useRouter();
   const pathname = usePathname();
   const [comment, setComment] = useState('');
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
@@ -15,9 +15,9 @@ export default function Input() {
       await axios.post(fetchUrl, {
         content: comment,
       });
-      window.location.href = window.location.href;
-    } catch (err) {
-      console.log(err);
+      await mutate();
+    } catch (err: any) {
+      exceptionHandler(err);
     }
   };
   return (

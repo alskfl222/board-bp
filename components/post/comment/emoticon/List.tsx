@@ -31,23 +31,26 @@ export default function Container() {
   };
 
   return (
-    <div className='flex gap-2'>
-      {list.length > 0 &&
-        list.map((item, index) => {
-          return (
-            <div key={item.id}>
-              <div onClick={() => onClickList(index)}>
-                <Image
-                  src={`/emoticon/${item.name}/${item.thumbnail}`}
-                  alt={item.presented}
-                  title={item.presented}
-                  width={100}
-                  height={100}
-                />
+    <div className='flex flex-col gap-2'>
+      {list.length > 0 && (
+        <div className='flex'>
+          {list.map((item, index) => {
+            return (
+              <div key={item.id}>
+                <div onClick={() => onClickList(index)}>
+                  <Image
+                    src={`/emoticon/${item.name}/${item.thumbnail}`}
+                    alt={item.presented}
+                    title={item.presented}
+                    width={100}
+                    height={100}
+                  />
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+      )}
       {isExpanded && idx > -1 && <Items name={list[idx].name} />}
     </div>
   );

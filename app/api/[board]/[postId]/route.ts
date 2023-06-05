@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import prisma from '@db';
 import { validateToken } from '@auth';
 
@@ -21,15 +22,19 @@ export async function GET(
   });
   if (!post)
     return NextResponse.json({ error: 'Invalid postId' }, { status: 404 });
-  const preView = req.cookies.get('pre-view')
-    ? (JSON.parse(req.cookies.get('pre-view')!.value) as number[])
+
+  const cookieStore = cookies();
+  const preView = cookieStore.get('pre-view')
+    ? (JSON.parse(cookieStore.get('pre-view')!.value) as number[])
     : [];
 
-  const response = NextResponse.json({
-    post: { ...post, author: post.author.name, authorId: undefined },
-  });
+  const postData = { ...post, author: post.author.name, authorId: undefined };
+
   if (!preView.includes(postId)) {
     const pre = preView.length >= 100 ? preView.slice(-100) : preView;
+    const response = NextResponse.json({
+      post: postData,
+    });
     response.cookies.set('pre-view', JSON.stringify([...pre, postId]), {
       path: '/',
       httpOnly: true,
@@ -40,8 +45,12 @@ export async function GET(
       where: { id: postId },
       data: { view: { increment: 1 } },
     });
+    return response;
   }
-  return response;
+
+  return NextResponse.json({
+    post: postData,
+  });
 }
 
 export async function DELETE(

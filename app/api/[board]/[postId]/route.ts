@@ -18,7 +18,7 @@ export async function GET(
     return NextResponse.json({ error: 'Invalid Info' }, { status: 404 });
   const post = await prisma.post.findUnique({
     where: { id: postId },
-    include: { author: true },
+    include: { author: true, sentiment: true },
   });
   if (!post)
     return NextResponse.json({ error: 'Invalid postId' }, { status: 404 });

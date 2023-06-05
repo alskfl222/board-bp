@@ -17,7 +17,7 @@ export const useUserStore = create<Store>((set) => ({
     set((state) => {
       sessionStorage.setItem('isLogin', 'true');
       sessionStorage.setItem('userId', `${id}`);
-      return { ...state, isLogin: true };
+      return { ...state, isLogin: true, userId: id };
     });
   },
   signOut() {

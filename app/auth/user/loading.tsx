@@ -1,3 +1,5 @@
+import Loading from '@comp/Loading';
+
 export default function LoadingUser() {
-  return <div>LOADING USER</div>;
+  return <Loading />;
 }

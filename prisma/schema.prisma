@@ -21,6 +21,7 @@ model User {
   posts     Post[]
   comments  Comment[]
   emoticons UserEmoticon[]
+  historys  UserHistory[]
 }
 
 model Board {
@@ -28,14 +29,16 @@ model Board {
   name      String  @unique
   admin     Admin[]
   posts     Post[]
+  historys  UserHistory[]
 }
 
 model Admin {
-  id        Int      @id @default(autoincrement())
   userId    Int
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   boardId   Int
   board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  @@id([userId, boardId])
 }
 
 model Post {
@@ -46,6 +49,9 @@ model Post {
   author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   title     String
   content   String  @db.MediumText
+  view      Int     @default(0)
+  like      Int     @default(0)
+  hate      Int     @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
   comments  Comment[]
@@ -60,6 +66,8 @@ model Comment {
   content   String  @db.MediumText
   parentId  Int?
   parent    Comment?   @relation("CommentToComment", fields: [parentId], references: [id])
+  like      Int     @default(0)
+  hate      Int     @default(0)
   comments  Comment[]  @relation("CommentToComment")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
@@ -91,4 +99,13 @@ model Emoticon {
   name      String
   listId    Int
   list      EmoticonList  @relation(fields: [listId], references: [id], onDelete: Cascade)
+}
+
+model UserHistory {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  boardId   Int     
+  board     Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }

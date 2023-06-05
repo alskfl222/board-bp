@@ -3,7 +3,7 @@ import prisma from '@db';
 import { validateToken } from '@auth';
 
 export async function GET(
-  _: NextRequest,
+  req: NextRequest,
   {
     params,
   }: {
@@ -15,10 +15,33 @@ export async function GET(
 
   if (!board || !postId)
     return NextResponse.json({ error: 'Invalid Info' }, { status: 404 });
-  const post = await prisma.post.findUnique({ where: { id: postId } });
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+    include: { author: true },
+  });
   if (!post)
     return NextResponse.json({ error: 'Invalid postId' }, { status: 404 });
-  return NextResponse.json({ post });
+  const preView = req.cookies.get('pre-view')
+    ? (JSON.parse(req.cookies.get('pre-view')!.value) as number[])
+    : [];
+
+  const response = NextResponse.json({
+    post: { ...post, author: post.author.name, authorId: undefined },
+  });
+  if (!preView.includes(postId)) {
+    const pre = preView.length >= 100 ? preView.slice(-100) : preView;
+    response.cookies.set('pre-view', JSON.stringify([...pre, postId]), {
+      path: '/',
+      httpOnly: true,
+      sameSite: 'strict',
+      expires: new Date().getTime() + 60 * 60 * 1000,
+    });
+    await prisma.post.update({
+      where: { id: postId },
+      data: { view: { increment: 1 } },
+    });
+  }
+  return response;
 }
 
 export async function DELETE(

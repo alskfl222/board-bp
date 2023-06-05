@@ -8,7 +8,10 @@ interface Store {
 }
 
 export const useUserStore = create<Store>((set) => ({
-  isLogin: JSON.parse(sessionStorage.getItem('isLogin') || 'false'),
+  isLogin:
+    typeof window !== 'undefined'
+      ? JSON.parse(sessionStorage.getItem('isLogin') || 'false')
+      : false,
   userId: -1,
   signIn(id: number) {
     set((state) => {
@@ -25,5 +28,3 @@ export const useUserStore = create<Store>((set) => ({
     });
   },
 }));
-
-

@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useUserStore } from '@store/user';
 import { getFetchUrl } from '@util';
 
-const Editor = dynamic(() => import('@comp/Editor'), {
+const Editor = dynamic(() => import('@comp/editor/Editor'), {
   ssr: false,
 });
 

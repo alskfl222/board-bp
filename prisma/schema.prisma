@@ -48,9 +48,9 @@ model Post {
   authorId  Int
   author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   title     String
-  content   String  @db.MediumText
   view      Int     @default(0)
   sentiment PostSentiment[]
+  content   String  @db.MediumText
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
   comments  Comment[]

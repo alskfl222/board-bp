@@ -1,16 +1,9 @@
-import { useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import useSWR from 'swr';
 import Loading from '@comp/Loading';
+import { Item, useEmoticonStore } from '@store/emoticon';
 import { getFetchUrl } from '@util';
-
-type Item = {
-  id: number;
-  path: string;
-  name: string;
-  listId: number;
-};
 
 export default function Items({ name }: { name: string }) {
   const fetchUrl = getFetchUrl(`/emoticon/${name}`);
@@ -18,9 +11,19 @@ export default function Items({ name }: { name: string }) {
   const { data, isLoading } = useSWR(fetchUrl, (url) =>
     axios.get(url).then((res) => res.data)
   );
+  const { isExist, add, remove } = useEmoticonStore();
 
   if (isLoading) return <Loading />;
-  const items = data.list as any[];
+  const items = data.list as Item[];
+  console.log(items)
+
+  const onClickEmoticon = (item: Item) => {
+    if (!isExist(item)) {
+      add(item);
+    } else {
+      remove(item);
+    }
+  };
 
   return (
     <div>
@@ -29,11 +32,12 @@ export default function Items({ name }: { name: string }) {
           return (
             <div key={item.id} className=''>
               <Image
-                src={`/emoticon/${name}/${item.path}`}
+                src={`/emoticon/${item.kind}/${item.path}`}
                 alt={item.name}
                 title={item.name}
                 width={100}
                 height={100}
+                onClick={() => onClickEmoticon(item)}
               />
             </div>
           );

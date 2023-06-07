@@ -49,11 +49,11 @@ model Post {
   author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   title     String
   view      Int     @default(0)
-  sentiment PostSentiment[]
   content   String  @db.MediumText
+  sentiment PostSentiment[]
+  comments  Comment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
-  comments  Comment[]
 }
 
 model Comment {
@@ -63,6 +63,7 @@ model Comment {
   postId    Int
   post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
   content   String  @db.MediumText
+  emoticons EmoticonComment[]
   parentId  Int?
   parent    Comment?   @relation("CommentToComment", fields: [parentId], references: [id])
   sentiment CommentSentiment[]
@@ -97,6 +98,16 @@ model Emoticon {
   name      String
   listId    Int
   list      EmoticonList  @relation(fields: [listId], references: [id], onDelete: Cascade)
+  comments  EmoticonComment[]
+}
+
+model EmoticonComment {
+  emoticonId  Int
+  emoticon    Emoticon  @relation(fields: [emoticonId], references: [id], onDelete: Cascade)
+  commentId   Int
+  comment     Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@id([emoticonId, commentId])
 }
 
 model PostSentiment {

@@ -13,5 +13,9 @@ export async function GET(
   const list = await prisma.emoticon.findMany({
     where: { listId: emoticonList.id },
   });
-  return NextResponse.json({ list });
+  return NextResponse.json({
+    list: list.map((emoticon) => {
+      return { ...emoticon, kind: params.emoticonName };
+    }),
+  });
 }

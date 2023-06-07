@@ -3,7 +3,8 @@ import { usePathname } from 'next/navigation';
 import axios from 'axios';
 import { KeyedMutator } from 'swr';
 import { getFetchUrl, exceptionHandler } from '@util';
-import EmoticonList from '@comp/post/comment/emoticon/List';
+import EmoticonList from './emoticon/List';
+import Selected from './emoticon/Selected';
 
 export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
   const pathname = usePathname();
@@ -32,6 +33,7 @@ export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
       ) : (
         <button onClick={() => setIsExpanded(true)}>이모티콘</button>
       )}
+      <Selected />
       <input
         className='text-black'
         value={comment}

@@ -36,6 +36,25 @@ export default async function BoardList({
     },
   });
 
+  const toDateString = (createdAt: Date) => {
+    const today = new Date();
+    // const date = new Date(createdAt);
+    if (
+      today.getFullYear() === createdAt.getFullYear() &&
+      today.getMonth() === createdAt.getMonth() &&
+      today.getDate() === createdAt.getDate()
+    ) {
+      return `${createdAt.getHours().toString().padStart(2, '0')}:${createdAt
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}`;
+    } else {
+      return `${(createdAt.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}. ${createdAt.getDate().toString().padStart(2, '0')}.`;
+    }
+  };
+
   return (
     <>
       <div>
@@ -56,7 +75,7 @@ export default async function BoardList({
                 {post.title}
               </div>
               <div className='col-span-2'>
-                {post.author.name} {post.createdAt.toISOString()}
+                {post.author.name} {toDateString(post.createdAt)}
               </div>
             </Link>
           );

@@ -13,7 +13,6 @@ type Item = {
 };
 
 export default function Items({ name }: { name: string }) {
-  console.log(name)
   const fetchUrl = getFetchUrl(`/emoticon/${name}`);
 
   const { data, isLoading } = useSWR(fetchUrl, (url) =>
@@ -21,14 +20,12 @@ export default function Items({ name }: { name: string }) {
   );
 
   if (isLoading) return <Loading />;
-  // console.log(data)
   const items = data.list as any[];
 
   return (
     <div>
       <div className='p-2 flex gap-2 border'>
         {items.map((item) => {
-          console.log(`/emoticon/${name}/${item.path}`)
           return (
             <div key={item.id} className=''>
               <Image

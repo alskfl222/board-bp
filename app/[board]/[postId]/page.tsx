@@ -78,6 +78,19 @@ export default function Post() {
     } catch {}
   };
 
+  const toDateString = (createdAt: string) => {
+    const date = new Date(createdAt);
+    return `${date.getFullYear()}. ${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}. ${date
+      .getDate()
+      .toString()
+      .padStart(2, '0')}. ${date.getHours()}:${date
+      .getMinutes()
+      .toString()
+      .padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+  };
+
   return (
     <div className='flex flex-col'>
       <div className='p-2'>
@@ -88,7 +101,7 @@ export default function Post() {
       <div className='p-2 border border-dashed border-yellow-700'>
         <div>제목: {post.title}</div>
         <div>작성자: {post.author}</div>
-        <div>작성시간: {post.createdAt.toLocaleString('ko-KR')}</div>
+        <div>작성시간: {toDateString(post.createdAt)}</div>
         <div>조회수: {post.view}</div>
         <div className='p-2 flex justify-center gap-4 border border-dashed border-yellow-900'>
           <button className='border' onClick={onClickLike}>

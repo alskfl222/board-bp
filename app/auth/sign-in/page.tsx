@@ -18,8 +18,8 @@ export default function SignIn() {
     const fetchUrl = getFetchUrl(pathname);
 
     try {
-      const res = await axios.post(fetchUrl, { email, password });
-      signIn(res.data.userId);
+      const { data } = await axios.post(fetchUrl, { email, password });
+      signIn(data.userId);
       router.back();
     } catch (err) {
       console.error(err);

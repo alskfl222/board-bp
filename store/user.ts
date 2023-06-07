@@ -12,7 +12,10 @@ export const useUserStore = create<Store>((set) => ({
     typeof window !== 'undefined'
       ? JSON.parse(sessionStorage.getItem('isLogin') || 'false')
       : false,
-  userId: -1,
+  userId:
+    typeof window !== 'undefined'
+      ? JSON.parse(sessionStorage.getItem('userId') || '-1')
+      : -1,
   signIn(id: number) {
     set((state) => {
       sessionStorage.setItem('isLogin', 'true');

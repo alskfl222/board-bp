@@ -24,7 +24,6 @@ export default function Post() {
   const post = data.post;
 
   const sentiments: any[] = post.sentiment;
-  console.log(sentiments);
   const likers: any[] = [];
   const haters: any[] = [];
   sentiments.forEach((sentiment) => {
@@ -37,11 +36,39 @@ export default function Post() {
 
   const mySentiment = sentiments.find((sentiment) => {
     return sentiment.userId === userId;
-  });
+  }) ?? { degree: 0 };
 
   const onClickLike = async () => {
-    if (!mySentiment) router.push('/auth/sign-in');
-    const degree = mySentiment.degree < 3 ? mySentiment.degree + 1 : 3;
+    if (userId === -1) {
+      alert('로그인 필요');
+      router.push('/auth/sign-in');
+      return;
+    }
+    if (mySentiment.degree >= 3) {
+      alert('3추 이상 금지');
+      return;
+    }
+    const degree = mySentiment.degree + 1;
+    try {
+      const res = await axios
+        .put(`${fetchUrl}/sentiment`, { degree })
+        .then((res) => res.data);
+      console.log(res);
+      await mutate();
+    } catch {}
+  };
+
+  const onClickHate = async () => {
+    if (userId === -1) {
+      alert('로그인 필요');
+      router.push('/auth/sign-in');
+      return;
+    }
+    if (mySentiment.degree <= -3) {
+      alert('3비추 이상 금지');
+      return;
+    }
+    const degree = mySentiment.degree - 1;
     try {
       const res = await axios
         .put(`${fetchUrl}/sentiment`, { degree })
@@ -63,13 +90,13 @@ export default function Post() {
         <div>작성자: {post.author}</div>
         <div>작성시간: {post.createdAt.toLocaleString('ko-KR')}</div>
         <div>조회수: {post.view}</div>
-        <div>좋아요: {likeCount}</div>
-        <div>싫어요: {hateCount}</div>
-        <div>
-          <button onClick={onClickLike}>좋아요</button>
-        </div>
-        <div>
-          <button>싫어요</button>
+        <div className='p-2 flex justify-center gap-4 border border-dashed border-yellow-900'>
+          <button className='border' onClick={onClickLike}>
+            좋아요: {likeCount}
+          </button>
+          <button className='border' onClick={onClickHate}>
+            싫어요: {hateCount}
+          </button>
         </div>
       </div>
       <div className='p-2' dangerouslySetInnerHTML={{ __html: post.content }} />

@@ -8,13 +8,28 @@ export async function GET(
 ) {
   const res = await prisma.comment.findMany({
     where: { postId: parseInt(params.postId) },
-    include: { author: true },
+    include: {
+      author: true,
+      emoticons: {
+        include: {
+          emoticon: {
+            include: {
+              list: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   const processed = res.map((comment) => {
     return {
       ...comment,
       author: comment.author.name,
+      emoticons: comment.emoticons.map((item: any) => {
+        item.emoticon.kind = item.emoticon.list.name
+        return item.emoticon;
+      }),
     };
   });
 
@@ -39,7 +54,7 @@ export async function POST(
   if ('error' in user)
     return NextResponse.json({ error: user.error }, { status: 400 });
 
-  const { parentId, content } = await request.json();
+  const { parentId, content, emoticons } = await request.json();
 
   try {
     const res = await prisma.comment.create({
@@ -50,9 +65,26 @@ export async function POST(
         content,
       },
     });
+    for (const emoticon of emoticons) {
+      const result = await prisma.emoticonComment.create({
+        data: {
+          emoticon: {
+            connect: {
+              id: emoticon.id,
+            },
+          },
+          comment: {
+            connect: {
+              id: res.id,
+            },
+          },
+        },
+      });
+    }
     const comment = {
       ...res,
       author: user.name,
+      emoticons,
     };
     return NextResponse.json(comment, { status: 201 });
   } catch (err) {

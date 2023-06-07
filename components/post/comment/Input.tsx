@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
 import { KeyedMutator } from 'swr';
-import { getFetchUrl, exceptionHandler } from '@util';
 import EmoticonList from './emoticon/List';
 import Selected from './emoticon/Selected';
+import { useEmoticonStore } from '@store/emoticon';
+import { getFetchUrl, exceptionHandler } from '@util';
 
 export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
   const pathname = usePathname();
+  const { selected } = useEmoticonStore();
   const [comment, setComment] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
@@ -16,6 +18,7 @@ export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
     try {
       await axios.post(fetchUrl, {
         content: comment,
+        emoticons: selected,
       });
       await mutate();
     } catch (err: any) {

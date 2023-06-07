@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export interface Item {
+export interface EmoticonItem {
   id: number;
   kind: string;
   path: string;
@@ -9,10 +9,10 @@ export interface Item {
 }
 
 interface Emoticon {
-  selected: Item[];
-  isExist: (item: Item) => boolean;
-  add: (item: Item) => void;
-  remove: (item: Item) => void;
+  selected: EmoticonItem[];
+  isExist: (item: EmoticonItem) => boolean;
+  add: (item: EmoticonItem) => void;
+  remove: (item: EmoticonItem) => void;
 }
 
 export const useEmoticonStore = create<Emoticon>((set, get) => ({

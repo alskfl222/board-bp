@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import Input from './Input';
 import Item from './item/Item';
 import Loading from '@comp/Loading';
+import { EmoticonItem } from '@store/emoticon';
 import { getFetchUrl } from '@util';
 
 export interface Comment {
@@ -17,6 +18,7 @@ export interface Comment {
   content: string;
   createdAt: string;
   updatedAt: string;
+  emoticons: EmoticonItem[];
   comments: Comment[];
 }
 

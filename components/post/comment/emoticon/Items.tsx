@@ -2,7 +2,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import useSWR from 'swr';
 import Loading from '@comp/Loading';
-import { Item, useEmoticonStore } from '@store/emoticon';
+import { EmoticonItem, useEmoticonStore } from '@store/emoticon';
 import { getFetchUrl } from '@util';
 
 export default function Items({ name }: { name: string }) {
@@ -14,10 +14,9 @@ export default function Items({ name }: { name: string }) {
   const { isExist, add, remove } = useEmoticonStore();
 
   if (isLoading) return <Loading />;
-  const items = data.list as Item[];
-  console.log(items)
+  const items = data.list as EmoticonItem[];
 
-  const onClickEmoticon = (item: Item) => {
+  const onClickEmoticon = (item: EmoticonItem) => {
     if (!isExist(item)) {
       add(item);
     } else {

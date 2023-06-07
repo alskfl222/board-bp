@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import axios from 'axios';
 import useSWR from 'swr';
-import { getFetchUrl } from '@util';
+import { exceptionHandler, getFetchUrl } from '@util';
 import { useUserStore } from '@store/user';
 import Loading from '@comp/Loading';
-import Container from '@comp/post/comment/Container';
+import CommentContainer from '@comp/post/comment/Container';
 
 export default function Post() {
   const router = useRouter();
@@ -50,12 +50,13 @@ export default function Post() {
     }
     const degree = mySentiment.degree + 1;
     try {
-      const res = await axios
+      await axios
         .put(`${fetchUrl}/sentiment`, { degree })
         .then((res) => res.data);
-      console.log(res);
       await mutate();
-    } catch {}
+    } catch (err) {
+      exceptionHandler(err);
+    }
   };
 
   const onClickHate = async () => {
@@ -70,12 +71,13 @@ export default function Post() {
     }
     const degree = mySentiment.degree - 1;
     try {
-      const res = await axios
+      await axios
         .put(`${fetchUrl}/sentiment`, { degree })
         .then((res) => res.data);
-      console.log(res);
       await mutate();
-    } catch {}
+    } catch (err) {
+      exceptionHandler(err);
+    }
   };
 
   const toDateString = (createdAt: string) => {
@@ -113,7 +115,7 @@ export default function Post() {
         </div>
       </div>
       <div className='p-2' dangerouslySetInnerHTML={{ __html: post.content }} />
-      <Container />
+      <CommentContainer />
     </div>
   );
 }

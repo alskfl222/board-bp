@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import axios from 'axios';
 import { KeyedMutator } from 'swr';
 import Info from './Info';
@@ -11,7 +12,14 @@ import { exceptionHandler, getFetchUrl } from '@util';
 import type { Comment } from '../Container';
 
 export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {
-  const { id, parentId, content: prevContent, comments, mutate } = comment;
+  const {
+    id,
+    parentId,
+    content: prevContent,
+    comments,
+    emoticons,
+    mutate,
+  } = comment;
   const content = useRef(prevContent);
   const [mode, setMode] = useState<'read' | 'modify' | 'recomment'>('read');
   const [inputText, setInputText] = useState(prevContent);
@@ -34,7 +42,7 @@ export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {
       setInputText(res.data.content);
       setMode('read');
     } catch (err) {
-      exceptionHandler(err)
+      exceptionHandler(err);
     }
   };
 
@@ -53,6 +61,21 @@ export default function Item(comment: Comment & { mutate: KeyedMutator<any> }) {
           setMode={setMode}
           onClickCancel={onClickCancel}
         />
+        {emoticons.length > 0 &&
+          emoticons.map((emoticon) => {
+            console.log(`/emoticon/${emoticon.kind}/${emoticon.path}`);
+            return (
+              <div key={emoticon.id}>
+                <Image
+                  src={`/emoticon/${emoticon.kind}/${emoticon.path}`}
+                  alt={emoticon.name}
+                  title={emoticon.name}
+                  width={100}
+                  height={100}
+                />
+              </div>
+            );
+          })}
         {mode !== 'modify' ? (
           <div>{content.current}</div>
         ) : (

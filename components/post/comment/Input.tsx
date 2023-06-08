@@ -1,15 +1,14 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { usePathname } from 'next/navigation';
 import axios from 'axios';
 import { KeyedMutator } from 'swr';
-import EmoticonList from './emoticon/List';
-import Selected from './emoticon/Selected';
-import { useEmoticonStore } from '@store/emoticon';
+import EmoticonContainer from './emoticon/Container';
 import { getFetchUrl, exceptionHandler } from '@util';
+import { EmoticonContext } from '@hook/useEmoticon';
 
 export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
   const pathname = usePathname();
-  const { selected } = useEmoticonStore();
+  const { selected, cleanUp } = useContext(EmoticonContext);
   const [comment, setComment] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
@@ -20,6 +19,7 @@ export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
         content: comment,
         emoticons: selected,
       });
+      cleanUp();
       await mutate();
     } catch (err: any) {
       exceptionHandler(err);
@@ -27,16 +27,11 @@ export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
   };
 
   return (
-    <div className='p-2 flex flex-col border border-lime-500'>
-      {isExpanded ? (
-        <div>
-          <EmoticonList />
-          <button onClick={() => setIsExpanded(false)}>접기</button>
-        </div>
-      ) : (
-        <button onClick={() => setIsExpanded(true)}>이모티콘</button>
-      )}
-      <Selected />
+    <div className='p-2 flex flex-col gap-2 border border-lime-500'>
+      <EmoticonContainer
+        isExpanded={isExpanded}
+        setIsExpanded={setIsExpanded}
+      />
       <input
         className='text-black'
         value={comment}

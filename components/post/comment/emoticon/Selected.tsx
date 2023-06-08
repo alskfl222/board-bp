@@ -1,10 +1,11 @@
+import { useContext } from 'react';
 import Image from 'next/image';
-import { useEmoticonStore } from '@store/emoticon';
+import { EmoticonContext } from '@hook/useEmoticon';
 
 export default function Selected() {
-  const { selected, remove } = useEmoticonStore();
+  const { selected, remove } = useContext(EmoticonContext);
   return (
-    <div>
+    <div className='flex gap-2'>
       {selected.length > 0 &&
         selected.map((item) => {
           return (

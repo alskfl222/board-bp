@@ -1,8 +1,9 @@
+import { useContext } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import useSWR from 'swr';
 import Loading from '@comp/Loading';
-import { EmoticonItem, useEmoticonStore } from '@store/emoticon';
+import { EmoticonItem, EmoticonContext } from '@hook/useEmoticon';
 import { getFetchUrl } from '@util';
 
 export default function Items({ name }: { name: string }) {
@@ -11,7 +12,7 @@ export default function Items({ name }: { name: string }) {
   const { data, isLoading } = useSWR(fetchUrl, (url) =>
     axios.get(url).then((res) => res.data)
   );
-  const { isExist, add, remove } = useEmoticonStore();
+  const { isExist, add, remove } = useContext(EmoticonContext);
 
   if (isLoading) return <Loading />;
   const items = data.list as EmoticonItem[];

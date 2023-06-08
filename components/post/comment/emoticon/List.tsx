@@ -8,7 +8,7 @@ import Loading from '@comp/Loading';
 import { getFetchUrl } from '@util';
 import Items from './Items';
 
-export default function Container() {
+export default function List() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [idx, setIdx] = useState(-1);
   const fetchUrl = getFetchUrl('/emoticon');

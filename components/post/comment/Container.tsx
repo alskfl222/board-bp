@@ -7,6 +7,7 @@ import Input from './Input';
 import Item from './item/Item';
 import Loading from '@comp/Loading';
 import { EmoticonItem } from '@store/emoticon';
+import { EmoticonProvider } from '@hook/useEmoticon';
 import { getFetchUrl } from '@util';
 
 export interface Comment {
@@ -39,13 +40,19 @@ export default function Container() {
       <div className='p-2 flex flex-col gap-4'>
         {comments.length > 0 ? (
           comments.map((comment) => {
-            return <Item key={comment.id} {...comment} mutate={mutate} />;
+            return (
+              <EmoticonProvider key={comment.id}>
+                <Item {...comment} mutate={mutate} />
+              </EmoticonProvider>
+            );
           })
         ) : (
           <div>댓글 없음</div>
         )}
       </div>
-      <Input mutate={mutate} />
+      <EmoticonProvider>
+        <Input mutate={mutate} />
+      </EmoticonProvider>
     </div>
   );
 }

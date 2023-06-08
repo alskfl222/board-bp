@@ -25,6 +25,7 @@
       "@util": ["./util/index.ts"],
       "@db": ["./db/index.ts"],
       "@store/*": ["./store/*"],
+      "@hook/*": ["./hook/*"],
       "@auth": ["./auth/index.ts"],
       "@data/*": ["./data/*"]
     }

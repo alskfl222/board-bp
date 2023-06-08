@@ -13,6 +13,7 @@ interface Emoticon {
   isExist: (item: EmoticonItem) => boolean;
   add: (item: EmoticonItem) => void;
   remove: (item: EmoticonItem) => void;
+  cleanUp: () => void;
 }
 
 export const useEmoticonStore = create<Emoticon>((set, get) => ({
@@ -30,6 +31,11 @@ export const useEmoticonStore = create<Emoticon>((set, get) => ({
     set((state) => {
       const removed = get().selected.filter((exist) => exist.id !== item.id);
       return { ...state, selected: removed };
+    });
+  },
+  cleanUp() {
+    set((state) => {
+      return { ...state, selected: [] };
     });
   },
 }));

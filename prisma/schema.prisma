@@ -102,12 +102,11 @@ model Emoticon {
 }
 
 model EmoticonComment {
+  id          Int      @id @default(autoincrement())
   emoticonId  Int
   emoticon    Emoticon  @relation(fields: [emoticonId], references: [id], onDelete: Cascade)
   commentId   Int
   comment     Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
-
-  @@id([emoticonId, commentId])
 }
 
 model PostSentiment {

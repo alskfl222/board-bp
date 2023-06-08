@@ -18,6 +18,9 @@ export async function GET(
             },
           },
         },
+        orderBy: {
+          id: 'asc'
+        }
       },
     },
   });
@@ -27,7 +30,7 @@ export async function GET(
       ...comment,
       author: comment.author.name,
       emoticons: comment.emoticons.map((item: any) => {
-        item.emoticon.kind = item.emoticon.list.name
+        item.emoticon.kind = item.emoticon.list.name;
         return item.emoticon;
       }),
     };
@@ -66,7 +69,7 @@ export async function POST(
       },
     });
     for (const emoticon of emoticons) {
-      const result = await prisma.emoticonComment.create({
+      await prisma.emoticonComment.create({
         data: {
           emoticon: {
             connect: {
@@ -98,7 +101,7 @@ export async function PUT(request: NextRequest) {
   if ('error' in user)
     return NextResponse.json({ error: user.error }, { status: 400 });
 
-  const { id, content } = await request.json();
+  const { id, content, emoticons } = await request.json();
 
   const check = await prisma.comment.findUnique({ where: { id } });
   if (!check)
@@ -106,11 +109,30 @@ export async function PUT(request: NextRequest) {
   if (check.authorId !== user.id)
     return NextResponse.json({ error: 'Not Your Comment' }, { status: 403 });
 
+  await prisma.emoticonComment.deleteMany({ where: { commentId: id } });
+  for (const emoticon of emoticons) {
+    await prisma.emoticonComment.create({
+      data: {
+        emoticon: {
+          connect: {
+            id: emoticon.id,
+          },
+        },
+        comment: {
+          connect: {
+            id,
+          },
+        },
+      },
+    });
+  }
+  
   try {
     const res = await prisma.comment.update({
       where: { id: parseInt(id) },
       data: {
         content,
+        emoticons: {},
       },
     });
     return NextResponse.json(res, { status: 201 });

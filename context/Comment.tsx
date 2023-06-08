@@ -17,6 +17,8 @@ import {
 } from './Emoticon';
 import { getFetchUrl, exceptionHandler } from '@util';
 
+type CommentMode = 'read' | 'modify' | 'recomment';
+
 export interface Comment {
   id: number;
   postId: number;
@@ -34,8 +36,9 @@ export interface CommentHook extends Omit<Comment, 'content'>, EmoticonHook {
   prevContent: string;
   content: MutableRefObject<string>;
   mutate: KeyedMutator<any>;
-  mode: 'read' | 'modify' | 'recomment';
-  setMode: Dispatch<SetStateAction<'read' | 'modify' | 'recomment'>>;
+  mode: CommentMode;
+  setMode: Dispatch<SetStateAction<CommentMode>>;
+  modeState?: [CommentMode, Dispatch<SetStateAction<CommentMode>>];
   inputText: string;
   setInputText: Dispatch<SetStateAction<string>>;
   isEmoticonsExpanded: boolean;
@@ -48,7 +51,14 @@ export interface CommentHook extends Omit<Comment, 'content'>, EmoticonHook {
 }
 
 const useComment = (
-  initialValue: Comment & { mutate: KeyedMutator<any> } & EmoticonHook
+  initialValue: Comment &
+    EmoticonHook & {
+      mutate: KeyedMutator<any>;
+      modeState?: [
+        'read' | 'modify' | 'recomment',
+        Dispatch<SetStateAction<'read' | 'modify' | 'recomment'>>
+      ];
+    }
 ): CommentHook => {
   const {
     id,
@@ -68,10 +78,12 @@ const useComment = (
     add,
     remove,
     cleanUp,
+    modeState,
   } = initialValue;
   const pathname = usePathname();
   const content = useRef(prevContent);
-  const [mode, setMode] = useState<'read' | 'modify' | 'recomment'>('read');
+  const state = useState<'read' | 'modify' | 'recomment'>('read');
+  const [mode, setMode] = modeState ? modeState : state;
   const [inputText, setInputText] = useState(prevContent);
   const [isEmoticonsExpanded, setIsEmoticonsExpanded] = useState(false);
   const [isRecommentExpanded, setIsRecommentExpanded] = useState(false);

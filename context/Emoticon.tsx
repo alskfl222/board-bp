@@ -29,7 +29,7 @@ export const useEmoticon = (): EmoticonHook => {
   }
 
   function add(item: EmoticonItem) {
-    setSelected((state) => [...selected, item]);
+    if (selected.length < 3) setSelected((state) => [...selected, item]);
   }
   function remove(item: EmoticonItem) {
     setSelected((state) => selected.filter((exist) => exist.id !== item.id));

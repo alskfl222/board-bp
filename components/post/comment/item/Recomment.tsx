@@ -1,23 +1,22 @@
-import { useState, Dispatch, SetStateAction } from 'react';
-import { usePathname } from 'next/navigation';
+import { useState, useContext } from 'react';
 import axios from 'axios';
-import { getFetchUrl } from '@util';
-import { KeyedMutator } from 'swr';
+import EmoticonContainer from '../emoticon/Container';
+import { exceptionHandler, getFetchUrl } from '@util';
+import { CommentContext } from '@context/Comment';
 
-export default function Recomment({
-  id,
-  parentId,
-  setMode,
-  onClickCancel,
-  mutate,
-}: {
-  id: number;
-  parentId: number | null;
-  setMode: Dispatch<SetStateAction<'recomment' | 'modify' | 'read'>>;
-  onClickCancel: () => void;
-  mutate: KeyedMutator<any>;
-}) {
-  const pathname = usePathname();
+export default function Recomment() {
+  const {
+    id,
+    parentId,
+    pathname,
+    mutate,
+    selected,
+    remove,
+    setMode,
+    isEmoticonsExpanded,
+    setIsEmoticonsExpanded,
+    onClickCancel,
+  } = useContext(CommentContext);
   const [recomment, setRecomment] = useState('');
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
 
@@ -26,14 +25,23 @@ export default function Recomment({
       await axios.post(fetchUrl, {
         parentId: parentId ?? id,
         content: recomment,
+        emoticons: selected,
       });
       await mutate();
       setMode('read');
-    } catch (err) {}
+    } catch (err) {
+      exceptionHandler(err);
+    }
   };
 
   return (
-    <div className='w-full flex justify-between'>
+    <div className='w-full flex flex-col justify-between'>
+      <EmoticonContainer
+        selected={selected}
+        remove={remove}
+        isExpanded={isEmoticonsExpanded}
+        setIsExpanded={setIsEmoticonsExpanded}
+      />
       <input
         className='text-black'
         value={recomment}

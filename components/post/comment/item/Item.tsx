@@ -2,9 +2,9 @@
 
 import { useEffect, useContext } from 'react';
 import Info from './Info';
+import Content from './Content';
 import Recomment from './Recomment';
 import { CommentContext, CommentProvider } from '@context/Comment';
-import Content from './Content';
 
 export default function Item() {
   const {
@@ -18,6 +18,7 @@ export default function Item() {
     setMode,
     isRecommentExpanded,
     setIsRecommentExpanded,
+    pathname,
     onClickCancel,
   } = useContext(CommentContext);
 
@@ -58,13 +59,18 @@ export default function Item() {
         </div>
       )}
       {mode === 'recomment' && (
-        <Recomment
-          id={id}
-          parentId={parentId}
-          setMode={setMode}
-          onClickCancel={onClickCancel}
-          mutate={mutate}
-        />
+        <CommentProvider
+          initialValue={{
+            id,
+            parentId,
+            pathname,
+            mutate,
+            onClickCancel,
+            modeState: [mode, setMode],
+          }}
+        >
+          <Recomment />
+        </CommentProvider>
       )}
     </div>
   );

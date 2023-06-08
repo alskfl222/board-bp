@@ -1,58 +1,53 @@
 'use client';
 
 import { useRef, useState, useEffect } from 'react';
-// import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Editor from '@comp/editor/Editor';
 import { useUserStore } from '@store/user';
 import { exceptionHandler, getFetchUrl } from '@util';
 
-// const Editor = dynamic(() => import('@comp/editor/Editor'), {
-//   ssr: false,
-// });
-
-// const convertImageToIframe = (html: string) => {
-//   const regex = /https:\/\/img\.youtube\.com\/vi\/(.+?)\/hqdefault\.jpg/g;
-//   let match;
-//   const videoIds = [];
-
-//   while ((match = regex.exec(html)) !== null) {
-//     videoIds.push(match[1]);
-//   }
-
-//   let resultHTML = html;
-//   for (const videoId of videoIds) {
-//     const imageHTML = `<p><img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" contenteditable="false"><br></p>`;
-//     const videoHTML = `<div><iframe width="560" height="315" src="https://www.youtube.com/embed/${videoId}" title="Youtube player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
-//     resultHTML = resultHTML.replace(imageHTML, videoHTML);
-//   }
-//   return resultHTML;
-// };
-
-export default function CreatePost({ params }: { params: { board: string } }) {
+export default function ModifyPost({
+  params,
+}: {
+  params: { board: string; postId: string };
+}) {
   const router = useRouter();
   const isLogin = useUserStore((state) => state.isLogin);
   const [title, setTitle] = useState('');
   const titleRef = useRef<HTMLInputElement | null>(null);
   const editorRef = useRef<any>(null);
-  const fetchUrl = getFetchUrl(`/${params.board}`);
+  const fetchUrl = getFetchUrl(`/${params.board}/${params.postId}`);
 
   useEffect(() => {
     if (!isLogin) router.push(`/${params.board}`);
-  }, [router, isLogin, params]);
+
+    async function init() {
+      try {
+        const { post } = await axios.get(fetchUrl).then((res) => res.data);
+        setTitle(post.title);
+
+        if (editorRef.current)
+          editorRef.current.getInstance().setHTML(post.content);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    init();
+    // eslint-disable-next-line
+  }, [router, isLogin, params, fetchUrl]);
 
   const onSubmit = async () => {
     // const rawHTML = editorRef.current.getInstance().getHTML();
-    // const content = convertImageToIframe(rawHTML);
-    const content = editorRef.current.getInstance().getHTML();
+    // const contentHTML = convertImageToIframe(rawHTML);
+    const contentHTML = editorRef.current.getInstance().getHTML();
     const body = {
       board: params.board,
       title,
-      content,
+      content: contentHTML,
     };
     try {
-      const response = await axios.post(fetchUrl, body);
+      const response = await axios.put(`${fetchUrl}/modify`, body);
       router.push(`/${params.board}/${response.data.post.id}`);
     } catch (err) {
       exceptionHandler(err)

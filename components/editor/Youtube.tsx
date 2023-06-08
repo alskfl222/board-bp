@@ -39,6 +39,11 @@ const createContainerEl = () => {
 const getYoutubeId = (url: string) => {
   const urlObj = new URL(url);
   if (urlObj.hostname === 'youtu.be') return urlObj.pathname.slice(1);
+  if (
+    urlObj.hostname === 'www.youtube.com' &&
+    urlObj.pathname.startsWith('/shorts')
+  )
+    return urlObj.pathname.split('/').at(-1);
   const queryId = urlObj.searchParams.get('v');
   if (queryId) return queryId;
   return null;
@@ -69,7 +74,7 @@ export const createYoutubeToolbarIcon =
         .getInstance()
         .setHTML(
           existHTML +
-            `<p><br></p><img src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" contenteditable="false" />`
+            `<div><iframe width="560" height="315" src="https://www.youtube.com/embed/${youtubeId}" title="Youtube player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br></div>`
         );
       ytInput.value = '';
     };

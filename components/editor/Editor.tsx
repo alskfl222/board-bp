@@ -52,18 +52,18 @@ const TuiEditor = ({ content = '내용을 입력해주세요.', editorRef }: Pro
           usageStatistics={false}
           customHTMLRenderer={{
             htmlBlock: {
-              // iframe(node) {
-              //   return [
-              //     {
-              //       type: 'openTag',
-              //       tagName: 'iframe',
-              //       outerNewLine: true,
-              //       attributes: node.attrs,
-              //     },
-              //     { type: 'html', content: node.childrenHTML ?? '' },
-              //     { type: 'closeTag', tagName: 'iframe', outerNewLine: true },
-              //   ];
-              // },
+              iframe(node) {
+                return [
+                  {
+                    type: 'openTag',
+                    tagName: 'iframe',
+                    outerNewLine: true,
+                    attributes: node.attrs,
+                  },
+                  { type: 'html', content: node.childrenHTML ?? '' },
+                  { type: 'closeTag', tagName: 'iframe', outerNewLine: true },
+                ];
+              },
               div(node) {
                 return [
                   {

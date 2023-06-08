@@ -95,9 +95,15 @@ export default function Post() {
 
   return (
     <div className='flex flex-col'>
-      <div className='p-2'>
+      <div className='p-2 flex justify-between'>
         <Link className='text-sm font-bold' href={{ pathname: `/${board}` }}>
           목록으로
+        </Link>
+        <Link
+          className='text-sm font-bold'
+          href={{ pathname: `${pathname}/modify` }}
+        >
+          수정
         </Link>
       </div>
       <div className='p-2 border border-dashed border-yellow-700'>
@@ -106,6 +112,7 @@ export default function Post() {
         <div>작성시간: {toDateString(post.createdAt)}</div>
         <div>조회수: {post.view}</div>
         <div className='p-2 flex justify-center gap-4 border border-dashed border-yellow-900'>
+          <div>내 투표: {mySentiment.degree}</div>
           <button className='border' onClick={onClickLike}>
             좋아요: {likeCount}
           </button>

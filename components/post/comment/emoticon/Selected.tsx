@@ -1,9 +1,10 @@
-import { useContext } from 'react';
 import Image from 'next/image';
-import { EmoticonContext } from '@hook/useEmoticon';
+import { CommentHook } from '@context/Comment';
 
-export default function Selected() {
-  const { selected, remove } = useContext(EmoticonContext);
+export default function Selected({
+  selected,
+  remove,
+}: Pick<CommentHook, 'selected' | 'remove'>) {
   return (
     <div className='flex gap-2'>
       {selected.length > 0 &&

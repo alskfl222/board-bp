@@ -1,23 +1,23 @@
-import { MutableRefObject, Dispatch, SetStateAction } from 'react';
-import { usePathname } from 'next/navigation';
 import axios from 'axios';
-import { KeyedMutator } from 'swr';
+
+import { useContext } from 'react';
 import { Read } from './Button';
-import type { Comment } from '../Container';
+import { CommentContext } from '@context/Comment';
 import { exceptionHandler, getFetchUrl, toPrettyKST } from '@util';
 
-export default function Info(
-  info: Omit<Comment, 'content'> & {
-    content: MutableRefObject<string>;
-    mode: 'read' | 'modify' | 'recomment';
-    setMode: Dispatch<SetStateAction<'read' | 'modify' | 'recomment'>>;
-    onClickCancel: () => void;
-    mutate: KeyedMutator<any>;
-  }
-) {
-  const { id, parentId, author, authorId, createdAt, mode, setMode, mutate } =
-    info;
-  const pathname = usePathname();
+export default function Info() {
+  const {
+    id,
+    parentId,
+    author,
+    authorId,
+    createdAt,
+    mode,
+    setMode,
+    mutate,
+    pathname,
+  } = useContext(CommentContext);
+
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
 
   const onClickDelete = async () => {

@@ -4,11 +4,11 @@ import axios from 'axios';
 import { KeyedMutator } from 'swr';
 import EmoticonContainer from './emoticon/Container';
 import { getFetchUrl, exceptionHandler } from '@util';
-import { EmoticonContext } from '@hook/useEmoticon';
+import { EmoticonContext } from '@context/Emoticon';
 
 export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
   const pathname = usePathname();
-  const { selected, cleanUp } = useContext(EmoticonContext);
+  const { selected, remove, cleanUp } = useContext(EmoticonContext);
   const [comment, setComment] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
@@ -29,6 +29,8 @@ export default function Input({ mutate }: { mutate: KeyedMutator<any> }) {
   return (
     <div className='p-2 flex flex-col gap-2 border border-lime-500'>
       <EmoticonContainer
+        selected={selected}
+        remove={remove}
         isExpanded={isExpanded}
         setIsExpanded={setIsExpanded}
       />

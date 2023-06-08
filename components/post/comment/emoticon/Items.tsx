@@ -3,7 +3,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import useSWR from 'swr';
 import Loading from '@comp/Loading';
-import { EmoticonItem, EmoticonContext } from '@hook/useEmoticon';
+import { EmoticonItem, EmoticonContext } from '@context/Emoticon';
 import { getFetchUrl } from '@util';
 
 export default function Items({ name }: { name: string }) {

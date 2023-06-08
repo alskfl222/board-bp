@@ -6,22 +6,9 @@ import useSWR from 'swr';
 import Input from './Input';
 import Item from './item/Item';
 import Loading from '@comp/Loading';
-import { EmoticonItem } from '@store/emoticon';
-import { EmoticonProvider } from '@hook/useEmoticon';
 import { getFetchUrl } from '@util';
-
-export interface Comment {
-  id: number;
-  postId: number;
-  parentId: number | null;
-  author: string;
-  authorId: number;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  emoticons: EmoticonItem[];
-  comments: Comment[];
-}
+import { Comment, CommentProvider } from '@context/Comment';
+import { EmoticonProvider } from '@context/Emoticon';
 
 export default function Container() {
   const pathname = usePathname();
@@ -41,9 +28,12 @@ export default function Container() {
         {comments.length > 0 ? (
           comments.map((comment) => {
             return (
-              <EmoticonProvider key={comment.id}>
-                <Item {...comment} mutate={mutate} />
-              </EmoticonProvider>
+              <CommentProvider
+                key={comment.id}
+                initialValue={{ ...comment, mutate }}
+              >
+                <Item />
+              </CommentProvider>
             );
           })
         ) : (

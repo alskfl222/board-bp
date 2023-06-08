@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, createContext } from 'react';
 
 export interface EmoticonItem {
   id: number;
@@ -8,9 +8,10 @@ export interface EmoticonItem {
   listId: number;
 }
 
-interface EmoticonHook {
+export interface EmoticonHook {
   selected: EmoticonItem[];
   isExist: (item: EmoticonItem) => boolean;
+  setUp: (items: EmoticonItem[]) => void;
   add: (item: EmoticonItem) => void;
   remove: (item: EmoticonItem) => void;
   cleanUp: () => void;
@@ -23,6 +24,9 @@ export const useEmoticon = (): EmoticonHook => {
     const exist = selected.find((exist) => exist.id === item.id);
     return exist ? true : false;
   }
+  function setUp(items: EmoticonItem[]) {
+    setSelected((state) => [...items]);
+  }
 
   function add(item: EmoticonItem) {
     setSelected((state) => [...selected, item]);
@@ -34,12 +38,13 @@ export const useEmoticon = (): EmoticonHook => {
     setSelected((state) => []);
   }
 
-  return { selected, isExist, add, remove, cleanUp };
+  return { selected, isExist, setUp, add, remove, cleanUp };
 };
 
-export const EmoticonContext = React.createContext<EmoticonHook>({
+export const EmoticonContext = createContext<EmoticonHook>({
   selected: [],
   isExist: (item: EmoticonItem) => true,
+  setUp: (items: EmoticonItem[]) => {},
   add: (item: EmoticonItem) => {},
   remove: (item: EmoticonItem) => {},
   cleanUp: () => {},

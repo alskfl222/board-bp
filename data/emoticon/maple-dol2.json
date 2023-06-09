@@ -1,0 +1,22 @@
+{
+  "info": {
+    "name": "메돌이콘2",
+    "author": "래피드스로우",
+    "reference": "https://arca.live/b/maplestory/75224971",
+    "thumbnail": "1.png"
+  },
+  "emoticons": [
+    {
+      "path": "1.png",
+      "name": "사실아님"
+    },
+    {
+      "path": "2.png",
+      "name": "메붕쿤"
+    },
+    {
+      "path": "3.gif",
+      "name": "하지마"
+    }
+  ]
+}

@@ -12,7 +12,119 @@ datasource db {
 
 model User {
   id        Int     @id @default(autoincrement())
+  admin     Admin[]
   email     String  @unique
   name      String  
   password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts     Post[]
+  comments  Comment[]
+  emoticons UserEmoticon[]
+  postSentiments  PostSentiment[]
+  commentSentiments CommentSentiment[]
+}
+
+model Board {
+  id        Int     @id @default(autoincrement())
+  name      String  @unique
+  admin     Admin[]
+  posts     Post[]
+}
+
+model Admin {
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  boardId   Int
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+
+  @@id([userId, boardId])
+}
+
+model Post {
+  id        Int     @id @default(autoincrement())
+  boardId   Int     
+  board     Board   @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  authorId  Int
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  title     String
+  view      Int     @default(0)
+  content   String  @db.MediumText
+  sentiments PostSentiment[]
+  comments  Comment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+}
+
+model Comment {
+  id        Int     @id @default(autoincrement())
+  authorId  Int
+  author    User    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  postId    Int
+  post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  content   String  @db.MediumText
+  emoticons EmoticonComment[]
+  parentId  Int?
+  parent    Comment?   @relation("CommentToComment", fields: [parentId], references: [id])
+  sentiments CommentSentiment[]
+  comments  Comment[]  @relation("CommentToComment")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
+}
+
+model EmoticonList {
+  id        Int     @id @default(autoincrement())
+  name      String  @unique
+  presented String  @unique
+  thumbnail String  @default("")
+  author    String
+  reference String
+  emoticons Emoticon[]
+  users     UserEmoticon[]
+}
+
+model UserEmoticon {
+  userId    Int
+  user      User    @relation(fields: [userId], references: [id])
+  listId    Int
+  list      EmoticonList  @relation(fields: [listId], references: [id])
+
+  @@id([userId, listId])
+}
+
+model Emoticon {
+  id        Int     @id @default(autoincrement())
+  path      String
+  name      String
+  listId    Int
+  list      EmoticonList  @relation(fields: [listId], references: [id], onDelete: Cascade)
+  comments  EmoticonComment[]
+}
+
+model EmoticonComment {
+  id          Int      @id @default(autoincrement())
+  emoticonId  Int
+  emoticon    Emoticon  @relation(fields: [emoticonId], references: [id], onDelete: Cascade)
+  commentId   Int
+  comment     Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
+}
+
+model PostSentiment {
+  id          Int     @id @default(autoincrement())
+  userId      Int
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId      Int
+  post        Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  degree      Int     @default(0)
+  createdAt   DateTime  @default(now())
+}
+
+model CommentSentiment {
+  id          Int     @id @default(autoincrement())
+  userId      Int
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  commentId   Int
+  comment     Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  degree      Int     @default(0)
+  createdAt   DateTime  @default(now())
 }

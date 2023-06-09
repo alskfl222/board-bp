@@ -1,0 +1,22 @@
+{
+  "info": {
+    "name": "메돌이콘",
+    "author": "래피드스로우",
+    "reference": "https://arca.live/b/maplestory/75224971",
+    "thumbnail": "1.png"
+  },
+  "emoticons": [
+    {
+      "path": "1.png",
+      "name": "힘내"
+    },
+    {
+      "path": "2.gif",
+      "name": "카이저경멸기가슬래셔"
+    },
+    {
+      "path": "3.gif",
+      "name": "시노농"
+    }
+  ]
+}

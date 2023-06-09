@@ -9,7 +9,17 @@ export async function GET(
   const res = await prisma.comment.findMany({
     where: { postId: parseInt(params.postId) },
     include: {
+      post: {
+        select: {
+          authorId: true
+        }
+      },
       author: true,
+      sentiments: {
+        include: {
+          user: true,
+        }
+      },
       emoticons: {
         include: {
           emoticon: {
@@ -29,6 +39,8 @@ export async function GET(
     return {
       ...comment,
       author: comment.author.name,
+      postAuthorId: comment.post.authorId,
+      post: undefined,
       emoticons: comment.emoticons.map((item: any) => {
         item.emoticon.kind = item.emoticon.list.name;
         return item.emoticon;

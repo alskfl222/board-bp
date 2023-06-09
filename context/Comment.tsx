@@ -15,6 +15,8 @@ import {
   EmoticonHook,
   EmoticonContext,
 } from './Emoticon';
+import { useUserStore } from '@store/user';
+import { initialComment } from '@data/comment';
 import { getFetchUrl, exceptionHandler } from '@util';
 
 type CommentMode = 'read' | 'modify' | 'recomment';
@@ -22,6 +24,7 @@ type CommentMode = 'read' | 'modify' | 'recomment';
 export interface Comment {
   id: number;
   postId: number;
+  postAuthorId: number;
   parentId: number | null;
   author: string;
   authorId: number;
@@ -29,11 +32,12 @@ export interface Comment {
   createdAt: string;
   updatedAt: string;
   emoticons: EmoticonItem[];
+  sentiments: any;
   comments: Comment[];
 }
 
 export interface CommentHook extends Omit<Comment, 'content'>, EmoticonHook {
-  prevContent: string;
+  userId: number;
   content: MutableRefObject<string>;
   mutate: KeyedMutator<any>;
   mode: CommentMode;
@@ -66,6 +70,7 @@ const useComment = (
   const {
     id,
     postId,
+    postAuthorId,
     parentId,
     author,
     authorId,
@@ -73,6 +78,7 @@ const useComment = (
     createdAt,
     updatedAt,
     emoticons,
+    sentiments,
     comments,
     mutate,
     selected,
@@ -82,10 +88,11 @@ const useComment = (
     remove,
     cleanUp,
     modeState,
-    recommentTo: prevRecomment
+    recommentTo: prevRecomment,
   } = initialValue;
   const pathname = usePathname();
   const content = useRef(prevContent);
+  const userId = useUserStore((state) => state.userId);
   const state = useState<'read' | 'modify' | 'recomment'>('read');
   const [mode, setMode] = modeState ? modeState : state;
   const [inputText, setInputText] = useState(prevContent);
@@ -133,25 +140,31 @@ const useComment = (
     setRecommentTo(author);
   };
 
-  return {
+  const commentProps = {
     id,
     postId,
+    postAuthorId,
     parentId,
     author,
     authorId,
-    prevContent,
     content,
     createdAt,
     updatedAt,
     emoticons,
+    sentiments,
     comments,
-    mutate,
+  };
+
+  const emoticonProps = {
     selected,
     isExist,
     setUp,
     add,
     remove,
     cleanUp,
+  };
+
+  const stateProps = {
     mode,
     setMode,
     recommentTo,
@@ -161,46 +174,26 @@ const useComment = (
     setIsEmoticonsExpanded,
     isRecommentExpanded,
     setIsRecommentExpanded,
-    pathname,
+  };
+
+  const onClickProps = {
     onSubmitModify,
     onClickRecomment,
     onClickCancel,
   };
+
+  return {
+    ...commentProps,
+    userId,
+    mutate,
+    ...emoticonProps,
+    ...stateProps,
+    pathname,
+    ...onClickProps,
+  };
 };
 
-export const CommentContext = createContext<CommentHook>({
-  id: -1,
-  postId: -1,
-  parentId: -1,
-  author: '',
-  authorId: -1,
-  prevContent: '',
-  content: { current: '' },
-  createdAt: '',
-  updatedAt: '',
-  emoticons: [],
-  comments: [],
-  mutate: async () => {},
-  selected: [],
-  isExist: (item: EmoticonItem) => true,
-  setUp: (items: EmoticonItem[]) => {},
-  add: (item: EmoticonItem) => {},
-  remove: (item: EmoticonItem) => {},
-  cleanUp: () => {},
-  mode: 'read',
-  setMode: () => {},
-  recommentTo: '',
-  inputText: '',
-  setInputText: () => {},
-  isEmoticonsExpanded: false,
-  setIsEmoticonsExpanded: () => {},
-  isRecommentExpanded: false,
-  setIsRecommentExpanded: () => {},
-  pathname: '',
-  onSubmitModify: () => {},
-  onClickRecomment: () => {},
-  onClickCancel: () => {},
-});
+export const CommentContext = createContext<CommentHook>(initialComment);
 
 export function CommentProvider({ children, initialValue }: any) {
   const emoticonValue = useEmoticon();

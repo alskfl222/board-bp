@@ -8,14 +8,12 @@ import Viewer from '@comp/editor/Viewer';
 import { useUserStore } from '@store/user';
 import Loading from '@comp/Loading';
 import CommentContainer from '@comp/post/comment/Container';
-import { useEffect, useRef } from 'react';
 import { exceptionHandler, getFetchUrl, toDateString } from '@util';
 
 export default function Post() {
   const router = useRouter();
   const pathname = usePathname();
   const userId = useUserStore((state) => state.userId);
-  const viewerRef = useRef<any>(null);
   const fetchUrl = getFetchUrl(pathname);
   const board = pathname.split('/').at(-2);
 
@@ -23,17 +21,10 @@ export default function Post() {
     axios.get(fetchUrl, { withCredentials: true }).then((res) => res.data)
   );
 
-  useEffect(() => {
-    if (data && viewerRef.current) {
-      console.log(viewerRef.current);
-      viewerRef.current.getInstance().setHTML(data.post.content);
-    }
-  }, [data]);
-
   if (isLoading) return <Loading />;
   const post = data.post;
 
-  const sentiments: any[] = post.sentiment;
+  const sentiments: any[] = post.sentiments;
   const likers: any[] = [];
   const haters: any[] = [];
   sentiments.forEach((sentiment) => {

@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import axios from 'axios';
 import useSWR from 'swr';
-import Viewer from '@comp/editor/Viewer';
-import { useUserStore } from '@store/user';
 import Loading from '@comp/Loading';
+import Viewer from '@comp/editor/Viewer';
 import CommentContainer from '@comp/post/comment/Container';
+import { useUserStore } from '@store/user';
 import { exceptionHandler, getFetchUrl, toDateString } from '@util';
 
 export default function Post() {
@@ -17,11 +17,15 @@ export default function Post() {
   const fetchUrl = getFetchUrl(pathname);
   const board = pathname.split('/').at(-2);
 
-  const { data, isLoading, mutate } = useSWR(fetchUrl, () =>
+  const { data, error, isLoading, mutate } = useSWR(fetchUrl, () =>
     axios.get(fetchUrl, { withCredentials: true }).then((res) => res.data)
   );
 
   if (isLoading) return <Loading />;
+  if (error) {
+    router.push(`/${board}`);
+    return <div>error</div>;
+  }
   const post = data.post;
 
   const sentiments: any[] = post.sentiments;
@@ -96,7 +100,9 @@ export default function Post() {
       </div>
       <div className='p-2 border border-dashed border-yellow-700'>
         <div>제목: {post.title}</div>
-        <div>작성자: {post.author}</div>
+        <div>
+          작성자: {post.author} {post.authorId === userId && '[나]'}
+        </div>
         <div>작성시간: {toDateString(post.createdAt)}</div>
         <div>조회수: {post.view}</div>
         <div className='p-2 flex justify-center gap-4 border border-dashed border-yellow-900'>

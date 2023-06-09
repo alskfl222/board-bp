@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import prisma from '@db';
 import { commonMenus } from '@data/menu';
+import List from '@comp/post/list/List';
+import Pagination from '@comp/post/list/Pagination';
 
 export default async function BoardList({
   params,
@@ -18,8 +20,10 @@ export default async function BoardList({
   }
 
   const page = searchParams.page ? parseInt(searchParams.page) : 1;
-  const take = 5;
+  const take = 15;
   const skip = (page - 1) * take;
+
+  const count = await prisma.post.count({ where: { boardId: board.id } });
 
   const posts = await prisma.post.findMany({
     where: { boardId: board.id },
@@ -37,54 +41,23 @@ export default async function BoardList({
     },
   });
 
-  const toDateString = (createdAt: Date) => {
-    const today = new Date();
-    // const date = new Date(createdAt);
-    if (
-      today.getFullYear() === createdAt.getFullYear() &&
-      today.getMonth() === createdAt.getMonth() &&
-      today.getDate() === createdAt.getDate()
-    ) {
-      return `${createdAt.getHours().toString().padStart(2, '0')}:${createdAt
-        .getMinutes()
-        .toString()
-        .padStart(2, '0')}`;
-    } else {
-      return `${(createdAt.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}. ${createdAt
-        .getDate()
-        .toString()
-        .padStart(2, '0')}.`;
-    }
-  };
-
   return (
-    <>
+    <div>
       <h1>{`${commonMenus[board.name].name}`}</h1>
-      <div>
-        <Link href={{ pathname: `/${board.name}/new` }}>글쓰기</Link>
+      <div className='p-2 flex items-center'>
+        <Link href={{ pathname: `/${board.name}/new` }} className='text-sm'>
+          글쓰기
+        </Link>
       </div>
-      {posts.length > 0 &&
-        posts.map((post) => {
-          return (
-            <Link
-              href={{ pathname: `/${board.name}/${post.id}` }}
-              key={post.id}
-              className='w-full p-2 grid grid-cols-6 border border-yellow-500'
-            >
-              <div className='border-r border-dashed border-yellow-700'>
-                {post.id}
-              </div>
-              <div className='col-span-3 border-r border-dashed border-yellow-700'>
-                {post.title}
-              </div>
-              <div className='col-span-2'>
-                {post.author.name} {toDateString(post.createdAt)}
-              </div>
-            </Link>
-          );
-        })}
-    </>
+      {posts.length > 0 ? (
+        <>
+          <div>총 {count}개</div>
+          <List board={board.name} posts={posts} />
+          <Pagination board={board.name} count={count} page={page} />
+        </>
+      ) : (
+        <div>게시글이 없습니다</div>
+      )}
+    </div>
   );
 }

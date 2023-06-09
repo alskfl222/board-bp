@@ -28,7 +28,7 @@ export async function GET(
     ? (JSON.parse(cookieStore.get('pre-view')!.value) as number[])
     : [];
 
-  const postData = { ...post, author: post.author.name, authorId: undefined };
+  const postData = { ...post, author: post.author.name };
 
   if (!preView.includes(postId)) {
     const pre = preView.length >= 100 ? preView.slice(-100) : preView;

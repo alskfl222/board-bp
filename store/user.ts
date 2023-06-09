@@ -1,13 +1,16 @@
+import axios from 'axios';
 import { create } from 'zustand';
+import { getFetchUrl } from '@util';
 
 interface Store {
   isLogin: boolean;
   userId: number;
   signIn: (id: number) => void;
   signOut: () => void;
+  validate: () => Promise<void>;
 }
 
-export const useUserStore = create<Store>((set) => ({
+export const useUserStore = create<Store>((set, get) => ({
   isLogin:
     typeof window !== 'undefined'
       ? JSON.parse(sessionStorage.getItem('isLogin') || 'false')
@@ -29,5 +32,13 @@ export const useUserStore = create<Store>((set) => ({
       sessionStorage.setItem('userId', '-1');
       return { ...state, isLogin: false, userId: -1 };
     });
+  },
+  async validate() {
+    const fetchUrl = getFetchUrl('/auth/validate');
+    try {
+      await axios.get(fetchUrl);
+    } catch {
+      get().signOut();
+    }
   },
 }));

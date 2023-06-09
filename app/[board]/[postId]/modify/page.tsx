@@ -13,18 +13,26 @@ export default function ModifyPost({
   params: { board: string; postId: string };
 }) {
   const router = useRouter();
-  const isLogin = useUserStore((state) => state.isLogin);
+  const { validate, isLogin, userId } = useUserStore();
   const [title, setTitle] = useState('');
   const titleRef = useRef<HTMLInputElement | null>(null);
   const editorRef = useRef<any>(null);
   const fetchUrl = getFetchUrl(`/${params.board}/${params.postId}`);
 
   useEffect(() => {
-    if (!isLogin) router.push(`/${params.board}`);
+    async function check() {
+      await validate();
+      if (!isLogin) router.push(`/${params.board}`);
+    }
+    check();
 
     async function init() {
       try {
         const { post } = await axios.get(fetchUrl).then((res) => res.data);
+        if (post.authorId !== userId) {
+          alert('니꺼 아님');
+          router.push(`/${params.board}`);
+        }
         setTitle(post.title);
 
         if (editorRef.current)
@@ -50,7 +58,7 @@ export default function ModifyPost({
       const response = await axios.put(`${fetchUrl}/modify`, body);
       router.push(`/${params.board}/${response.data.post.id}`);
     } catch (err) {
-      exceptionHandler(err)
+      exceptionHandler(err);
     }
   };
 

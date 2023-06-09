@@ -32,15 +32,19 @@ import { exceptionHandler, getFetchUrl } from '@util';
 
 export default function CreatePost({ params }: { params: { board: string } }) {
   const router = useRouter();
-  const isLogin = useUserStore((state) => state.isLogin);
+  const { validate, isLogin } = useUserStore();
   const [title, setTitle] = useState('');
   const titleRef = useRef<HTMLInputElement | null>(null);
   const editorRef = useRef<any>(null);
   const fetchUrl = getFetchUrl(`/${params.board}`);
 
   useEffect(() => {
-    if (!isLogin) router.push(`/${params.board}`);
-  }, [router, isLogin, params]);
+    async function check() {
+      await validate();
+      if (!isLogin) router.push(`/${params.board}`);
+    }
+    check();
+  }, [router, validate, isLogin, params]);
 
   const onSubmit = async () => {
     // const rawHTML = editorRef.current.getInstance().getHTML();
@@ -55,7 +59,7 @@ export default function CreatePost({ params }: { params: { board: string } }) {
       const response = await axios.post(fetchUrl, body);
       router.push(`/${params.board}/${response.data.post.id}`);
     } catch (err) {
-      exceptionHandler(err)
+      exceptionHandler(err);
     }
   };
 

@@ -184,12 +184,12 @@ const useComment = (
 
   return {
     ...commentProps,
-    userId,
-    mutate,
     ...emoticonProps,
     ...stateProps,
-    pathname,
     ...onClickProps,
+    pathname,
+    userId,
+    mutate,
   };
 };
 

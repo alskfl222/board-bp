@@ -95,13 +95,13 @@ export default function Info() {
       <div className='flex gap-2'>
         <div>
           {postAuthorId === authorId && '[작성자]'}
-          {userId === authorId && '[나] '}
-          {author}
+          {userId === authorId && '[나]'}
+          {' ' + author}
         </div>
         /<div>{toDateString(createdAt)}</div>
       </div>
-      <div className='border border-dashed border-lime-900'>
-        <div className='text-sm'>
+      <div className='border border-dashed border-lime-900 text-sm'>
+        <div className=''>
           <div>내 투표: {mySentiment.degree}</div>
           <div className='flex gap-2'>
             <button onClick={onClickLike}>좋아요 {likeCount}</button>/

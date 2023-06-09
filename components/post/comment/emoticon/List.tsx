@@ -32,7 +32,7 @@ export default function List() {
 
   return (
     <div className='flex flex-col gap-2'>
-      {list.length > 0 && (
+      {list.length > 0 ? (
         <div className='flex'>
           {list.map((item, index) => {
             return (
@@ -50,6 +50,8 @@ export default function List() {
             );
           })}
         </div>
+      ) : (
+        <div>넌 이모티콘이 없다</div>
       )}
       {isExpanded && idx > -1 && <Items name={list[idx].name} />}
     </div>

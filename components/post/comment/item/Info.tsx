@@ -3,20 +3,11 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { Read } from './Button';
 import { CommentContext } from '@context/Comment';
-import { exceptionHandler, getFetchUrl, toPrettyKST } from '@util';
+import { exceptionHandler, getFetchUrl, toDateString } from '@util';
 
 export default function Info() {
-  const {
-    id,
-    parentId,
-    author,
-    authorId,
-    createdAt,
-    mode,
-    setMode,
-    mutate,
-    pathname,
-  } = useContext(CommentContext);
+  const { id, author, createdAt, mode, setMode, mutate, pathname } =
+    useContext(CommentContext);
 
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
 
@@ -31,21 +22,13 @@ export default function Info() {
   };
 
   return (
-    <div className='w-full flex justify-between'>
-      <div>{author}</div>
+    <div className='w-full p-2 flex justify-between border border-lime-700'>
+      <div className='flex gap-2'>
+        <div>{author}</div>/<div>{toDateString(createdAt)}</div>
+      </div>
       <div>
-        <div>{toPrettyKST(createdAt)}</div>
         <div>
-          {mode === 'read' ? (
-            <Read
-              parentId={parentId}
-              authorId={authorId}
-              setMode={setMode}
-              onClickDelete={onClickDelete}
-            />
-          ) : (
-            '...'
-          )}
+          {mode === 'read' ? <Read onClickDelete={onClickDelete} /> : '...'}
         </div>
       </div>
     </div>

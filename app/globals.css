@@ -1,4 +1,29 @@
 @tailwind base;
+
+@layer base {
+  h1 {
+    @apply py-2 text-2xl
+  }
+  p {
+    @apply inline py-1
+  }
+  ol { 
+    @apply list-inside list-decimal
+  }
+  ul {
+    @apply list-inside list-disc marker:text-neutral-300;
+  }
+  table {
+    @apply my-2 table-auto
+  }
+  th, td {
+    @apply p-2 border
+  }
+  hr {
+    @apply mx-1 my-2
+  }
+}
+
 @tailwind components;
 @tailwind utilities;
 

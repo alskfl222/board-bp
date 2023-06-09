@@ -20,22 +20,21 @@ export default function Content() {
   } = useContext(CommentContext);
 
   return (
-    <div>
+    <div className='p-2'>
       {mode !== 'modify' ? (
-        <div>
+        <div className='flex flex-col gap-2'>
           {emoticons.length > 0 && (
             <div className='flex gap-2'>
               {emoticons.map((emoticon, index) => {
                 return (
-                  <div key={`${emoticon.id}_${index}`}>
-                    <Image
-                      src={`/emoticon/${emoticon.kind}/${emoticon.path}`}
-                      alt={emoticon.name}
-                      title={emoticon.name}
-                      width={100}
-                      height={100}
-                    />
-                  </div>
+                  <Image
+                    key={`${emoticon.id}_${index}`}
+                    src={`/emoticon/${emoticon.kind}/${emoticon.path}`}
+                    alt={emoticon.name}
+                    title={emoticon.name}
+                    width={100}
+                    height={100}
+                  />
                 );
               })}
             </div>

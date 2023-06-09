@@ -23,7 +23,7 @@ export default function Container() {
 
   return (
     <div className='border border-lime-300'>
-      댓글
+      <div className='p-2'>댓글</div>
       <div className='p-2 flex flex-col gap-4'>
         {comments.length > 0 ? (
           comments.map((comment) => {

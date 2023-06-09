@@ -13,11 +13,12 @@ export default function Recomment() {
     selected,
     remove,
     setMode,
+    recommentTo,
     isEmoticonsExpanded,
     setIsEmoticonsExpanded,
     onClickCancel,
   } = useContext(CommentContext);
-  const [recomment, setRecomment] = useState('');
+  const [recomment, setRecomment] = useState(`@${recommentTo} `);
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
 
   const onSubmitRecomment = async () => {
@@ -35,7 +36,7 @@ export default function Recomment() {
   };
 
   return (
-    <div className='w-full flex flex-col justify-between'>
+    <div className='w-full p-2 flex flex-col justify-between border'>
       <EmoticonContainer
         selected={selected}
         remove={remove}

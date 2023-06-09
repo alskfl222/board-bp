@@ -4,21 +4,31 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import axios from 'axios';
 import useSWR from 'swr';
-import { exceptionHandler, getFetchUrl } from '@util';
+import Viewer from '@comp/editor/Viewer';
 import { useUserStore } from '@store/user';
 import Loading from '@comp/Loading';
 import CommentContainer from '@comp/post/comment/Container';
+import { useEffect, useRef } from 'react';
+import { exceptionHandler, getFetchUrl, toDateString } from '@util';
 
 export default function Post() {
   const router = useRouter();
   const pathname = usePathname();
   const userId = useUserStore((state) => state.userId);
+  const viewerRef = useRef<any>(null);
   const fetchUrl = getFetchUrl(pathname);
   const board = pathname.split('/').at(-2);
 
   const { data, isLoading, mutate } = useSWR(fetchUrl, () =>
     axios.get(fetchUrl, { withCredentials: true }).then((res) => res.data)
   );
+
+  useEffect(() => {
+    if (data && viewerRef.current) {
+      console.log(viewerRef.current);
+      viewerRef.current.getInstance().setHTML(data.post.content);
+    }
+  }, [data]);
 
   if (isLoading) return <Loading />;
   const post = data.post;
@@ -80,19 +90,6 @@ export default function Post() {
     }
   };
 
-  const toDateString = (createdAt: string) => {
-    const date = new Date(createdAt);
-    return `${date.getFullYear()}. ${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, '0')}. ${date
-      .getDate()
-      .toString()
-      .padStart(2, '0')}. ${date.getHours()}:${date
-      .getMinutes()
-      .toString()
-      .padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
-  };
-
   return (
     <div className='flex flex-col'>
       <div className='p-2 flex justify-between'>
@@ -121,7 +118,7 @@ export default function Post() {
           </button>
         </div>
       </div>
-      <div className='p-2' dangerouslySetInnerHTML={{ __html: post.content }} />
+      <Viewer content={post.content} />
       <CommentContainer />
     </div>
   );

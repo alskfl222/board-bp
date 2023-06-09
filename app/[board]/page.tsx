@@ -1,6 +1,7 @@
-import prisma from '@db';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import prisma from '@db';
+import { commonMenus } from '@data/menu';
 
 export default async function BoardList({
   params,
@@ -51,12 +52,16 @@ export default async function BoardList({
     } else {
       return `${(createdAt.getMonth() + 1)
         .toString()
-        .padStart(2, '0')}. ${createdAt.getDate().toString().padStart(2, '0')}.`;
+        .padStart(2, '0')}. ${createdAt
+        .getDate()
+        .toString()
+        .padStart(2, '0')}.`;
     }
   };
 
   return (
     <>
+      <h1>{`${commonMenus[board.name].name}`}</h1>
       <div>
         <Link href={{ pathname: `/${board.name}/new` }}>글쓰기</Link>
       </div>

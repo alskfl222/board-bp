@@ -39,6 +39,7 @@ export interface CommentHook extends Omit<Comment, 'content'>, EmoticonHook {
   mode: CommentMode;
   setMode: Dispatch<SetStateAction<CommentMode>>;
   modeState?: [CommentMode, Dispatch<SetStateAction<CommentMode>>];
+  recommentTo: string;
   inputText: string;
   setInputText: Dispatch<SetStateAction<string>>;
   isEmoticonsExpanded: boolean;
@@ -47,6 +48,7 @@ export interface CommentHook extends Omit<Comment, 'content'>, EmoticonHook {
   setIsRecommentExpanded: Dispatch<SetStateAction<boolean>>;
   pathname: string;
   onSubmitModify: () => void;
+  onClickRecomment: (author: string) => void;
   onClickCancel: () => void;
 }
 
@@ -58,6 +60,7 @@ const useComment = (
         'read' | 'modify' | 'recomment',
         Dispatch<SetStateAction<'read' | 'modify' | 'recomment'>>
       ];
+      recommentTo: string;
     }
 ): CommentHook => {
   const {
@@ -79,12 +82,14 @@ const useComment = (
     remove,
     cleanUp,
     modeState,
+    recommentTo: prevRecomment
   } = initialValue;
   const pathname = usePathname();
   const content = useRef(prevContent);
   const state = useState<'read' | 'modify' | 'recomment'>('read');
   const [mode, setMode] = modeState ? modeState : state;
   const [inputText, setInputText] = useState(prevContent);
+  const [recommentTo, setRecommentTo] = useState(prevRecomment);
   const [isEmoticonsExpanded, setIsEmoticonsExpanded] = useState(false);
   const [isRecommentExpanded, setIsRecommentExpanded] = useState(false);
   const fetchUrl = getFetchUrl(`${pathname}/comment`);
@@ -123,6 +128,11 @@ const useComment = (
     setMode('read');
   };
 
+  const onClickRecomment = (author: string) => {
+    setMode('recomment');
+    setRecommentTo(author);
+  };
+
   return {
     id,
     postId,
@@ -144,6 +154,7 @@ const useComment = (
     cleanUp,
     mode,
     setMode,
+    recommentTo,
     inputText,
     setInputText,
     isEmoticonsExpanded,
@@ -152,6 +163,7 @@ const useComment = (
     setIsRecommentExpanded,
     pathname,
     onSubmitModify,
+    onClickRecomment,
     onClickCancel,
   };
 };
@@ -177,6 +189,7 @@ export const CommentContext = createContext<CommentHook>({
   cleanUp: () => {},
   mode: 'read',
   setMode: () => {},
+  recommentTo: '',
   inputText: '',
   setInputText: () => {},
   isEmoticonsExpanded: false,
@@ -185,6 +198,7 @@ export const CommentContext = createContext<CommentHook>({
   setIsRecommentExpanded: () => {},
   pathname: '',
   onSubmitModify: () => {},
+  onClickRecomment: () => {},
   onClickCancel: () => {},
 });
 

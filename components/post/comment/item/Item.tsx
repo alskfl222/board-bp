@@ -16,6 +16,7 @@ export default function Item() {
     setUp,
     mode,
     setMode,
+    recommentTo,
     isRecommentExpanded,
     setIsRecommentExpanded,
     pathname,
@@ -67,6 +68,7 @@ export default function Item() {
             mutate,
             onClickCancel,
             modeState: [mode, setMode],
+            recommentTo,
           }}
         >
           <Recomment />

@@ -22,7 +22,7 @@ const TuiEditor = ({ content = '내용을 입력해주세요.', editorRef }: Pro
   const toolbarItems = [
     ['heading', 'bold', 'italic'],
     ['hr'],
-    ['ul', 'ol', 'task'],
+    ['ul', 'ol'],
     ['table', 'link'],
     ['image'],
   ];

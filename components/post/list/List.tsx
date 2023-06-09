@@ -6,11 +6,14 @@ export default function List({
   posts,
 }: {
   board: string;
-  posts: (Post & {
+  posts: {
+    id: number;
+    title: string;
     author: {
       name: string;
     };
-  })[];
+    createdAt: Date;
+  }[];
 }) {
   const toDateString = (createdAt: Date) => {
     const today = new Date();
@@ -34,12 +37,18 @@ export default function List({
   return (
     <div className='flex flex-col gap-1'>
       <div className='w-full p-2 grid grid-cols-12 border border-yellow-500'>
-        <div className='border-r border-dashed border-yellow-700'>ID</div>
+        <div className='flex justify-center border-x border-dashed border-yellow-700'>
+          ID
+        </div>
         <div className='col-span-7 px-4 border-r border-dashed border-yellow-700'>
           제목
         </div>
-        <div className='col-span-2'>작성자</div>
-        <div className='col-span-2'>시간</div>
+        <div className='col-span-2 flex justify-center border-r border-dashed border-yellow-700'>
+          작성자
+        </div>
+        <div className='col-span-2 flex justify-center border-r border-dashed border-yellow-700'>
+          시간
+        </div>
       </div>
       {posts.length > 0 &&
         posts.map((post) => {
@@ -49,14 +58,18 @@ export default function List({
               key={post.id}
               className='w-full p-2 grid grid-cols-12 border border-yellow-500'
             >
-              <div className='border-r border-dashed border-yellow-700'>
+              <div className='flex justify-center border-x border-dashed border-yellow-700'>
                 {post.id}
               </div>
               <div className='col-span-7 px-4 border-r border-dashed border-yellow-700'>
                 {post.title}
               </div>
-              <div className='col-span-2'>{post.author.name}</div>
-              <div className='col-span-2'>{toDateString(post.createdAt)}</div>
+              <div className='col-span-2 flex justify-center border-r border-dashed border-yellow-700'>
+                {post.author.name}
+              </div>
+              <div className='col-span-2 flex justify-center border-r border-dashed border-yellow-700'>
+                {toDateString(post.createdAt)}
+              </div>
             </Link>
           );
         })}

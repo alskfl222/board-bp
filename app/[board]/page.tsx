@@ -29,12 +29,11 @@ export default async function BoardList({
     where: { boardId: board.id },
     skip,
     take,
-    include: {
-      author: {
-        select: {
-          name: true,
-        },
-      },
+    select: {
+      id: true,
+      title: true,
+      author: true,
+      createdAt: true,
     },
     orderBy: {
       id: 'desc',

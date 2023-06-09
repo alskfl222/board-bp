@@ -37,6 +37,7 @@ export interface Comment {
 }
 
 export interface CommentHook extends Omit<Comment, 'content'>, EmoticonHook {
+  isLogin: boolean;
   userId: number;
   content: MutableRefObject<string>;
   mutate: KeyedMutator<any>;
@@ -92,7 +93,7 @@ const useComment = (
   } = initialValue;
   const pathname = usePathname();
   const content = useRef(prevContent);
-  const userId = useUserStore((state) => state.userId);
+  const { isLogin, userId } = useUserStore();
   const state = useState<'read' | 'modify' | 'recomment'>('read');
   const [mode, setMode] = modeState ? modeState : state;
   const [inputText, setInputText] = useState(prevContent);
@@ -136,7 +137,11 @@ const useComment = (
   };
 
   const onClickRecomment = (author: string) => {
-    setMode('recomment');
+    if (mode === 'read') {
+      setMode('recomment');
+    } else {
+      setMode('read');
+    }
     setRecommentTo(author);
   };
 
@@ -188,6 +193,7 @@ const useComment = (
     ...stateProps,
     ...onClickProps,
     pathname,
+    isLogin,
     userId,
     mutate,
   };

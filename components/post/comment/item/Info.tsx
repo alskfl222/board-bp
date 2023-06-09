@@ -9,6 +9,7 @@ import { exceptionHandler, getFetchUrl, toDateString } from '@util';
 export default function Info() {
   const router = useRouter();
   const {
+    isLogin,
     id,
     postAuthorId,
     author,
@@ -16,7 +17,6 @@ export default function Info() {
     createdAt,
     sentiments,
     userId,
-    mode,
     setMode,
     mutate,
     pathname,
@@ -102,15 +102,13 @@ export default function Info() {
       </div>
       <div className='border border-dashed border-lime-900 text-sm'>
         <div className=''>
-          <div>내 투표: {mySentiment.degree}</div>
+          {isLogin && <div>내 투표: {mySentiment.degree}</div>}
           <div className='flex gap-2'>
             <button onClick={onClickLike}>좋아요 {likeCount}</button>/
             <button onClick={onClickHate}>싫어요 {hateCount}</button>
           </div>
         </div>
-        <div>
-          {mode === 'read' ? <Read onClickDelete={onClickDelete} /> : '...'}
-        </div>
+        {isLogin && <Read onClickDelete={onClickDelete} />}
       </div>
     </div>
   );

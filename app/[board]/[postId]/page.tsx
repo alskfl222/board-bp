@@ -106,7 +106,7 @@ export default function Post() {
         <div>작성시간: {toDateString(post.createdAt)}</div>
         <div>조회수: {post.view}</div>
         <div className='p-2 flex justify-center gap-4 border border-dashed border-yellow-900'>
-          <div>내 투표: {mySentiment.degree}</div>
+          {userId > -1 && <div>내 투표: {mySentiment.degree}</div>}
           <button className='border' onClick={onClickLike}>
             좋아요: {likeCount}
           </button>

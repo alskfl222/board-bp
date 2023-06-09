@@ -57,7 +57,7 @@ export default function Menu() {
           ) : (
             <SubMenu menus={logoutMenus} />
           )}
-          <div>---------</div>
+          <div className='w-full border-b border-dashed border-yellow-300' />
           <SubMenu menus={commonMenus} />
         </div>
       )}

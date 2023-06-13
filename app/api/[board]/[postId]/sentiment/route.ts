@@ -30,20 +30,37 @@ export async function PUT(
   });
 
   const { degree } = await req.json();
+  let res: any;
   if (sentiment) {
-    const res = await prisma.postSentiment.update({
+    res = await prisma.postSentiment.update({
       where: { id: sentiment.id },
       data: { degree },
     });
-    return NextResponse.json({ sentiment: res });
   } else {
-    const res = await prisma.postSentiment.create({
+    res = await prisma.postSentiment.create({
       data: {
         user: { connect: { id: user.id } },
         post: { connect: { id: post.id } },
         degree,
       },
     });
-    return NextResponse.json({ sentiment: res });
   }
+
+  const sentiments = await prisma.postSentiment.groupBy({
+    by: ['postId'],
+    _sum: {
+      degree: true,
+    },
+    where: {
+      postId: postId,
+    },
+  });
+
+  const degreeSum = sentiments[0]._sum.degree || 0;
+
+  await prisma.post.update({
+    where: { id: postId },
+    data: { degree_sum: degreeSum },
+  });
+  return NextResponse.json({ sentiment: res });
 }

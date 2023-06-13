@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import PostList from '@comp/user/PostList';
+import PostList from '@comp/user/post/List';
 import CommentList from '@comp/user/CommentList';
 import { validateToken } from '@auth';
 

@@ -103,7 +103,10 @@ export default function Post() {
         <div>
           작성자: {post.author} {post.authorId === userId && '[나]'}
         </div>
-        <div>작성시간: {toDateString(post.createdAt)}</div>
+        <div>
+          작성시간: {toDateString(post.createdAt).date}{' '}
+          {toDateString(post.createdAt).time}
+        </div>
         <div>조회수: {post.view}</div>
         <div className='p-2 flex justify-center gap-4 border border-dashed border-yellow-900'>
           {userId > -1 && <div>내 투표: {mySentiment.degree}</div>}

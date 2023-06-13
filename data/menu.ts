@@ -19,7 +19,7 @@ const logoutMenus: Record<string, Record<string, string>> = {
 const commonMenus: Record<string, Record<string, string>> = {
   notice: {
     path: '/notice',
-    name: '공지 사항',
+    name: '공지',
   },
 };
 

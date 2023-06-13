@@ -33,6 +33,8 @@ export default async function BoardList({
       id: true,
       title: true,
       author: true,
+      view: true,
+      degree_sum: true,
       createdAt: true,
     },
     orderBy: {

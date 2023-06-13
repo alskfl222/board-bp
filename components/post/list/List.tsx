@@ -12,6 +12,8 @@ export default function List({
     author: {
       name: string;
     };
+    view: number;
+    degree_sum: number;
     createdAt: Date;
   }[];
 }) {
@@ -23,8 +25,8 @@ export default function List({
       today.getDate() === createdAt.getDate()
     ) {
       return (
-        `${createdAt.getHours().toString().padStart(2, '0')}시 ` +
-        `${createdAt.getMinutes().toString().padStart(2, '0')}분`
+        `${createdAt.getHours().toString().padStart(2, '0')}:` +
+        `${createdAt.getMinutes().toString().padStart(2, '0')}`
       );
     } else {
       return (
@@ -36,43 +38,89 @@ export default function List({
 
   return (
     <div className='flex flex-col gap-1'>
-      <div className='w-full p-2 grid grid-cols-12 border border-yellow-500'>
-        <div className='flex justify-center border-x border-dashed border-yellow-700'>
-          ID
-        </div>
-        <div className='col-span-7 px-4 border-r border-dashed border-yellow-700'>
-          제목
-        </div>
-        <div className='col-span-2 flex justify-center border-r border-dashed border-yellow-700'>
-          작성자
-        </div>
-        <div className='col-span-2 flex justify-center border-r border-dashed border-yellow-700'>
-          시간
-        </div>
-      </div>
-      {posts.length > 0 &&
-        posts.map((post) => {
-          return (
-            <Link
-              href={{ pathname: `/${board}/${post.id}` }}
-              key={post.id}
-              className='w-full p-2 grid grid-cols-12 border border-yellow-500'
+      <table className='w-full p-2 flex flex-col'>
+        <thead>
+          <tr className='w-full flex border border-yellow-500'>
+            <th
+              className='flex-1 flex justify-center items-center 
+                       border-x border-dashed border-yellow-700'
             >
-              <div className='flex justify-center border-x border-dashed border-yellow-700'>
-                {post.id}
-              </div>
-              <div className='col-span-7 px-4 border-r border-dashed border-yellow-700'>
-                {post.title}
-              </div>
-              <div className='col-span-2 flex justify-center border-r border-dashed border-yellow-700'>
-                {post.author.name}
-              </div>
-              <div className='col-span-2 flex justify-center border-r border-dashed border-yellow-700'>
-                {toDateString(post.createdAt)}
-              </div>
-            </Link>
-          );
-        })}
+              ID
+            </th>
+            <th
+              className='flex-[13_13_0] px-4 flex justify-center items-center 
+                       border-r border-dashed border-yellow-700'
+            >
+              제목
+            </th>
+            <th
+              className='flex-[2_2_0] flex justify-center items-center 
+                       border-r border-dashed border-yellow-700'
+            >
+              조회수
+            </th>
+            <th
+              className='flex-[2_2_0] flex justify-center items-center 
+                       border-r border-dashed border-yellow-700'
+            >
+              반응
+            </th>
+            <th
+              className='flex-[2_2_0] flex justify-center items-center 
+                       border-r border-dashed border-yellow-700'
+            >
+              작성시간
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {posts.length > 0 ? (
+            posts.map((post) => {
+              return (
+                <tr
+                  key={post.id}
+                  className='w-full flex border border-yellow-500'
+                >
+                  <td
+                    className='flex-1 flex justify-center items-center 
+                             border-x border-dashed border-yellow-700'
+                  >
+                    {post.id}
+                  </td>
+                  <td
+                    className='flex-[13_13_0] px-4 flex justify-center items-center 
+                             border-r border-dashed border-yellow-700'
+                  >
+                    <Link href={{ pathname: `/${board}/${post.id}` }}>
+                      {post.title}
+                    </Link>
+                  </td>
+                  <td
+                    className='flex-[2_2_0] flex justify-center items-center 
+                             border-r border-dashed border-yellow-700'
+                  >
+                    {post.view}
+                  </td>
+                  <td
+                    className='flex-[2_2_0] flex justify-center items-center 
+                             border-r border-dashed border-yellow-700'
+                  >
+                    {post.degree_sum}
+                  </td>
+                  <td
+                    className='flex-[2_2_0] flex flex-col justify-center items-center 
+                             border-r border-dashed border-yellow-700 text-xs'
+                  >
+                    <div>{toDateString(post.createdAt)}</div>
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr>쓴 글 없음</tr>
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }

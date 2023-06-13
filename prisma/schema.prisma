@@ -50,7 +50,8 @@ model Post {
   title     String
   view      Int     @default(0)
   content   String  @db.MediumText
-  sentiments PostSentiment[]
+  sentiments  PostSentiment[]
+  degree_sum  Int   @default(0)
   comments  Comment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
@@ -66,7 +67,8 @@ model Comment {
   emoticons EmoticonComment[]
   parentId  Int?
   parent    Comment?   @relation("CommentToComment", fields: [parentId], references: [id])
-  sentiments CommentSentiment[]
+  sentiments  CommentSentiment[]
+  degree_sum  Int      @default(0)
   comments  Comment[]  @relation("CommentToComment")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())

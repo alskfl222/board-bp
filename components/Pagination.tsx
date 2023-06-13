@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
 export default function Pagination({
-  board,
+  pathname,
   count,
   page,
 }: {
-  board: string;
+  pathname: string;
   count: number;
   page: number;
 }) {
@@ -28,7 +28,7 @@ export default function Pagination({
       {pageList.length > 1 &&
         pageList.map((page) => {
           return (
-            <Link key={page} href={{ pathname: `/${board}`, query: { page } }}>
+            <Link key={page} href={{ pathname: `/${pathname}`, query: { page } }}>
               {page}
             </Link>
           );

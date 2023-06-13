@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import prisma from '@db';
 import { commonMenus } from '@data/menu';
 import List from '@comp/post/list/List';
-import Pagination from '@comp/post/list/Pagination';
+import Pagination from '@comp/Pagination';
 
 export default async function BoardList({
   params,
@@ -52,7 +52,7 @@ export default async function BoardList({
         <>
           <div>총 {count}개</div>
           <List board={board.name} posts={posts} />
-          <Pagination board={board.name} count={count} page={page} />
+          <Pagination pathname={board.name} count={count} page={page} />
         </>
       ) : (
         <div>게시글이 없습니다</div>

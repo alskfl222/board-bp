@@ -7,6 +7,7 @@ import { getFetchUrl } from '@util';
 import axios from 'axios';
 import Loading from '@comp/Loading';
 import Table from './Table';
+import Pagination from '@comp/pagination/Client';
 
 export type Post = {
   id: number;
@@ -21,17 +22,19 @@ type ListType = 'latest' | 'view' | 'like';
 
 export default function List() {
   const searchParams = useSearchParams();
+
   const [type, setType] = useState<ListType>('latest');
-  const page =
-    searchParams.get('page') && isNaN(parseInt(searchParams.get('page')!))
-      ? parseInt(searchParams.get('page') || '1')
-      : 1;
+  const [pp, setPp] = useState(
+    searchParams.get('pp') && !isNaN(parseInt(searchParams.get('pp')!))
+      ? parseInt(searchParams.get('pp') || '1')
+      : 1
+  );
 
   const onSelectType = (e: ChangeEvent<HTMLSelectElement>) => {
     setType(e.target.value as ListType);
   };
 
-  const fetchUrl = getFetchUrl(`/auth/user/post?type=${type}&page=${page}`);
+  const fetchUrl = getFetchUrl(`/auth/user/post?type=${type}&pp=${pp}`);
   const { data, isLoading } = useSWR(fetchUrl, () =>
     axios.get(fetchUrl).then((res) => res.data)
   );
@@ -39,7 +42,6 @@ export default function List() {
   if (isLoading) return <Loading />;
 
   const posts = data.posts as Post[];
-  console.log(posts);
 
   return (
     <div className='w-full p-2 border'>
@@ -52,6 +54,7 @@ export default function List() {
         </select>
       </div>
       <Table posts={posts} />
+      <Pagination count={16} page={pp} setPage={setPp} />
     </div>
   );
 }

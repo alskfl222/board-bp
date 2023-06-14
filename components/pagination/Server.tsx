@@ -4,10 +4,12 @@ export default function Pagination({
   pathname,
   count,
   page,
+  type = 'page',
 }: {
   pathname: string;
   count: number;
   page: number;
+  type?: string;
 }) {
   function getPageList(count: number, page: number) {
     const maxPage = Math.ceil(count / 15);
@@ -28,7 +30,7 @@ export default function Pagination({
       {pageList.length > 1 &&
         pageList.map((page) => {
           return (
-            <Link key={page} href={{ pathname: `/${pathname}`, query: { page } }}>
+            <Link key={page} href={{ pathname, query: { [type]: page } }}>
               {page}
             </Link>
           );

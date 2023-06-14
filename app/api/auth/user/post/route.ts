@@ -9,8 +9,8 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get('type') || 'latest';
   const page =
-    searchParams.get('page') && isNaN(parseInt(searchParams.get('page')!))
-      ? parseInt(searchParams.get('page') || '1')
+    searchParams.get('pp') && !isNaN(parseInt(searchParams.get('pp')!))
+      ? parseInt(searchParams.get('pp') || '1')
       : 1;
   const take = 2;
   const skip = (page - 1) * take;

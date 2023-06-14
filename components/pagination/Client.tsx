@@ -26,7 +26,8 @@ export default function Pagination({
   const pageList = getPageList();
 
   return (
-    <div>
+    <div className='flex gap-2'>
+      {page > 1 && <button onClick={() => setPage(page - 1)}>{'<'}</button>}
       {pageList.length > 1 &&
         pageList.map((page, idx) => {
           return (
@@ -35,6 +36,9 @@ export default function Pagination({
             </button>
           );
         })}
+      {page < maxPage && (
+        <button onClick={() => setPage(page + 1)}>{'>'}</button>
+      )}
     </div>
   );
 }

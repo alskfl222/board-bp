@@ -98,7 +98,7 @@ export default function Info() {
           {userId === authorId && '[나]'}
           {' ' + author}
         </div>
-        /<div>{toDateString(createdAt)}</div>
+        /<div>{toDateString(createdAt).date} {toDateString(createdAt).time}</div>
       </div>
       <div className='border border-dashed border-lime-900 text-sm'>
         <div className=''>

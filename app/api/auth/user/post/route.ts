@@ -12,8 +12,10 @@ export async function GET(req: NextRequest) {
     searchParams.get('pp') && !isNaN(parseInt(searchParams.get('pp')!))
       ? parseInt(searchParams.get('pp') || '1')
       : 1;
-  const take = 2;
+  const take = 10;
   const skip = (page - 1) * take;
+
+  const count = await prisma.post.count({ where: { authorId: user.id } });
 
   const res = await prisma.post.findMany({
     where: {
@@ -47,5 +49,5 @@ export async function GET(req: NextRequest) {
       board: post.board.name,
     };
   });
-  return NextResponse.json({ posts });
+  return NextResponse.json({ count, posts });
 }

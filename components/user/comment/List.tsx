@@ -9,13 +9,15 @@ import Loading from '@comp/Loading';
 import Table from './Table';
 import Pagination from '@comp/pagination/Client';
 
-export type Post = {
+export type Comment = {
   id: number;
   board: string;
-  title: string;
+  postId: number;
+  post: string;
+  content: string;
+  emoticons: { list: string; name: string; path: string }[];
   createdAt: string;
   degree_sum: number;
-  view: number;
 };
 
 export type ListType = 'latest' | 'view' | 'like';
@@ -24,13 +26,13 @@ export default function List() {
   const searchParams = useSearchParams();
 
   const [type, setType] = useState<ListType>('latest');
-  const [pp, setPp] = useState(
-    searchParams.get('pp') && !isNaN(parseInt(searchParams.get('pp')!))
-      ? parseInt(searchParams.get('pp') || '1')
+  const [cp, setCp] = useState(
+    searchParams.get('cp') && !isNaN(parseInt(searchParams.get('cp')!))
+      ? parseInt(searchParams.get('cp') || '1')
       : 1
   );
 
-  const fetchUrl = getFetchUrl(`/auth/user/post?type=${type}&pp=${pp}`);
+  const fetchUrl = getFetchUrl(`/auth/user/comment?type=${type}&cp=${cp}`);
   const { data, isLoading } = useSWR(fetchUrl, () =>
     axios.get(fetchUrl).then((res) => res.data)
   );
@@ -38,13 +40,13 @@ export default function List() {
   if (isLoading) return <Loading />;
 
   const count = data.count as number;
-  const posts = data.posts as Post[];
+  const comments = data.comments as Comment[];
 
   return (
     <div className='w-full p-2 border'>
-      <span>Post</span>
-      <Table posts={posts} type={type} setType={setType} />
-      <Pagination count={count} page={pp} setPage={setPp} />
+      <span>Comment</span>
+      <Table comments={comments} type={type} setType={setType} />
+      <Pagination count={count} page={cp} setPage={setCp} />
     </div>
   );
 }

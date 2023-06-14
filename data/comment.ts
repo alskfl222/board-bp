@@ -15,6 +15,7 @@ export const initialComment: CommentHook = {
   sentiments: [],
   comments: [],
   userId: -1,
+  isLogin: false,
   mutate: async () => {},
   selected: [],
   isExist: (item: EmoticonItem) => true,

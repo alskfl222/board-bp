@@ -26,25 +26,50 @@ export async function PUT(
   if (!comment)
     return NextResponse.json({ error: 'Invalid commentId' }, { status: 404 });
 
-  const sentiment = await prisma.commentSentiment.findFirst({
+  const sentiments = await prisma.commentSentiment.findMany({
     where: { userId: user.id, commentId },
   });
 
+  if (sentiments.length > 1) {
+    for (let i = 1; i < sentiments.length; i++) {
+      await prisma.commentSentiment.delete({ where: { id: sentiments[i].id } });
+    }
+  }
+
+  const sentiment = sentiments[0];
+
   const { degree } = await req.json();
+  let res: any;
   if (sentiment) {
-    const res = await prisma.commentSentiment.update({
+    res = await prisma.commentSentiment.update({
       where: { id: sentiment.id },
       data: { degree },
     });
-    return NextResponse.json({ sentiment: res });
   } else {
-    const res = await prisma.commentSentiment.create({
+    res = await prisma.commentSentiment.create({
       data: {
         user: { connect: { id: user.id } },
         comment: { connect: { id: comment.id } },
         degree,
       },
     });
-    return NextResponse.json({ sentiment: res });
   }
+
+  const totalSentiments = await prisma.commentSentiment.groupBy({
+    by: ['commentId'],
+    _sum: {
+      degree: true,
+    },
+    where: {
+      commentId: commentId,
+    },
+  });
+
+  const degreeSum = totalSentiments[0]._sum.degree || 0;
+
+  await prisma.comment.update({
+    where: { id: commentId },
+    data: { degree_sum: degreeSum },
+  });
+  return NextResponse.json({ sentiment: res });
 }

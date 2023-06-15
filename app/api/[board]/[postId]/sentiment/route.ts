@@ -25,9 +25,17 @@ export async function PUT(
   if (!post)
     return NextResponse.json({ error: 'Invalid postId' }, { status: 404 });
 
-  const sentiment = await prisma.postSentiment.findFirst({
+  const sentiments = await prisma.postSentiment.findMany({
     where: { userId: user.id, postId },
   });
+
+  if (sentiments.length > 1) {
+    for (let i = 1; i < sentiments.length; i++) {
+      await prisma.postSentiment.delete({ where: { id: sentiments[i].id } });
+    }
+  }
+
+  const sentiment = sentiments[0];
 
   const { degree } = await req.json();
   let res: any;
@@ -46,7 +54,7 @@ export async function PUT(
     });
   }
 
-  const sentiments = await prisma.postSentiment.groupBy({
+  const totalSentiments = await prisma.postSentiment.groupBy({
     by: ['postId'],
     _sum: {
       degree: true,
@@ -56,7 +64,7 @@ export async function PUT(
     },
   });
 
-  const degreeSum = sentiments[0]._sum.degree || 0;
+  const degreeSum = totalSentiments[0]._sum.degree || 0;
 
   await prisma.post.update({
     where: { id: postId },

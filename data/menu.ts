@@ -21,6 +21,10 @@ const commonMenus: Record<string, Record<string, string>> = {
     path: '/notice',
     name: '공지',
   },
+  newsGPT: {
+    path: '/newsGPT',
+    name: '뉴스GPT',
+  },
 };
 
 export { loginMenus, logoutMenus, commonMenus };

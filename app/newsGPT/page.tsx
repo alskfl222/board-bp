@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import parse from 'node-html-parser';
 
 export default function NewsGPT() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,10 +33,12 @@ export default function NewsGPT() {
   };
 
   const analyzeNewsContent = async () => {
-    const content = await axios.get('https://news.sbs.co.kr/news/endPage.do?news_id=N1007230862');
-    console.log(content)
+    const content = await axios.get(
+      'https://news.sbs.co.kr/news/endPage.do?news_id=N1007230862'
+    );
+    console.log(content);
     // const parsed = parse(content)
-  }
+  };
 
   useEffect(() => {
     if (sessionStorage.getItem('search-result')) {
@@ -60,9 +61,7 @@ export default function NewsGPT() {
             value={source}
             onChange={(e) => setSource(e.target.value)}
           >
-            <option value='전체' selected>
-              전체
-            </option>
+            <option value='전체'>전체</option>
             <option value='연합뉴스'>연합뉴스</option>
             <option value='YTN'>YTN</option>
             <option value='KBS'>KBS</option>
